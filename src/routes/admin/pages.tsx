@@ -1,4 +1,4 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, Outlet, useRouterState } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { Pencil, Trash2, Plus, ExternalLink } from "lucide-react";
@@ -11,13 +11,17 @@ export const Route = createFileRoute("/admin/pages")({
 });
 
 function AdminPages() {
+  const pathname = useRouterState({ select: (s) => s.location.pathname });
+  const isEditorRoute = pathname.startsWith("/admin/pages/");
   const [rows, setRows] = useState<PageDTO[]>([]);
   const [creating, setCreating] = useState(false);
   const [newSlug, setNewSlug] = useState("");
   const [newTitle, setNewTitle] = useState("");
 
   const reload = () => api.listPages().then(setRows).catch(() => setRows([]));
-  useEffect(() => { reload(); }, []);
+  useEffect(() => { if (!isEditorRoute) reload(); }, [isEditorRoute]);
+
+  if (isEditorRoute) return <Outlet />;
 
   const create = async () => {
     const slug = newSlug.trim().toLowerCase().replace(/[^a-z0-9-]/g, "-");
