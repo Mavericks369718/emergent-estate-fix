@@ -2,6 +2,7 @@
 // when no other content references it (property cover/gallery, blog cover,
 // page cover/content/sections).
 import { supabase, SUPABASE_BUCKET } from "./supabase";
+import { stripFocal } from "./imageFocal";
 
 /**
  * Best-effort cleanup. Accepts URL or storage-key strings. For each input:
@@ -57,8 +58,8 @@ async function cleanupOne(ref: string) {
     if (!ref.includes("/storage/v1/object/public/")) return;
   }
 
-  const url = row?.url ?? ref;
-  const path = row?.path ?? extractPath(ref);
+  const url = stripFocal(row?.url ?? ref);
+  const path = row?.path ?? extractPath(stripFocal(ref));
 
   // Check every referencing surface in parallel.
   const [listings, blogs, pages] = await Promise.all([

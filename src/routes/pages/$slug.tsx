@@ -5,6 +5,7 @@ import { Footer } from "@/components/site/Footer";
 import { fadeUp } from "@/lib/motion";
 import { api, ApiError, type PageDTO } from "@/lib/api";
 import { img } from "@/lib/imageMap";
+import { focalStyle } from "@/lib/imageFocal";
 import { MarkdownView } from "@/routes/admin/pages/$slug";
 
 export const Route = createFileRoute("/pages/$slug")({
@@ -58,7 +59,7 @@ function DynamicPage() {
               data-testid="page-cover"
             >
               <div className="aspect-[16/9] overflow-hidden">
-                <img src={img(page.cover)} alt={page.title} className="h-full w-full object-cover" loading="eager" />
+                <img src={img(page.cover)} alt={page.title} className="h-full w-full object-cover" style={focalStyle(page.cover)} loading="eager" />
               </div>
               <div className="absolute inset-0 bg-gradient-to-t from-background/55 via-transparent to-transparent" />
               <div className="grain" />

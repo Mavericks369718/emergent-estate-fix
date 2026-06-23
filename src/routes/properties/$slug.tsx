@@ -16,6 +16,7 @@ import { Footer } from "@/components/site/Footer";
 import { fadeUp } from "@/lib/motion";
 import { api, ApiError } from "@/lib/api";
 import { img } from "@/lib/imageMap";
+import { focalStyle } from "@/lib/imageFocal";
 
 export const Route = createFileRoute("/properties/$slug")({
   loader: async ({ params }) => {
@@ -78,6 +79,7 @@ function PropertyDetailPage() {
                 src={img(activeImg)}
                 alt={property.title}
                 className="h-full w-full object-cover"
+                style={focalStyle(activeImg)}
                 loading="eager"
               />
             </div>
@@ -103,7 +105,7 @@ function PropertyDetailPage() {
                     : "border-border/60 hover:border-foreground/40"
                 }`}
               >
-                <img src={img(g)} alt="" className="h-full w-full object-cover" loading="lazy" />
+                <img src={img(g)} alt="" className="h-full w-full object-cover" style={focalStyle(g)} loading="lazy" />
               </button>
             ))}
           </motion.div>
