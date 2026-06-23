@@ -228,7 +228,7 @@ function PropertyEditor({
             <Field label="Amenities (one per line)" value={(v.amenities ?? []).join("\n")} onChange={(x) => set("amenities", x.split("\n").map(s => s.trim()).filter(Boolean))} textarea testId="prop-amenities" />
           </div>
           <div className="col-span-2">
-            <Field label="Gallery (image keys/URLs, one per line)" value={(v.gallery ?? []).join("\n")} onChange={(x) => set("gallery", x.split("\n").map(s => s.trim()).filter(Boolean))} textarea testId="prop-gallery" />
+            <GalleryPicker value={v.gallery ?? []} onChange={(g) => set("gallery", g)} folder="properties" max={10} testId="prop-gallery" />
           </div>
           <label className="col-span-2 inline-flex items-center gap-3 text-sm">
             <input type="checkbox" checked={!!v.featured} onChange={(e) => set("featured", e.target.checked)} data-testid="prop-featured" className="h-4 w-4 accent-accent" />
