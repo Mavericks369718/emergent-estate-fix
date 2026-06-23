@@ -42,6 +42,14 @@ function AdminProperties() {
         await api.updateProperty(editing.slug!, editing);
         toast.success("Property updated");
       }
+      // Detect removed images and cleanup orphans (non-blocking).
+      const nextGallery = editing.gallery ?? [];
+      const nextCover = editing.cover ?? "";
+      const removed = [
+        ...originalGallery.filter((u) => !nextGallery.includes(u)),
+        ...(originalCover && originalCover !== nextCover ? [originalCover] : []),
+      ];
+      if (removed.length) cleanupOrphanImages(removed);
       setEditing(null);
       reload();
     } catch (err: any) {
@@ -66,8 +74,10 @@ function AdminProperties() {
   const remove = async (p: PropertyDTO) => {
     if (!confirm(`Delete "${p.title}"? This cannot be undone.`)) return;
     try {
+      const orphans = [p.cover, ...(p.gallery ?? [])];
       await api.deleteProperty(p.slug);
       toast.success("Property deleted");
+      cleanupOrphanImages(orphans);
       reload();
     } catch (err: any) { toast.error(err?.message); }
   };
