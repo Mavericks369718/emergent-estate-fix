@@ -162,7 +162,7 @@ export function GalleryPicker({
               }`}
               data-testid={testId ? `${testId}-item-${i}` : undefined}
             >
-              <img src={img(u)} alt="" className="h-full w-full object-cover" />
+              <img src={img(u)} alt="" className="h-full w-full object-cover" style={focalStyle(u)} />
               <div className="absolute inset-x-0 bottom-0 flex items-center justify-between bg-background/85 backdrop-blur-sm px-1.5 py-1 opacity-0 group-hover:opacity-100 transition-opacity">
                 <div className="flex items-center gap-0.5">
                   <button
@@ -186,15 +186,26 @@ export function GalleryPicker({
                     <ArrowRight className="h-3 w-3" strokeWidth={1.6} />
                   </button>
                 </div>
-                <button
-                  type="button"
-                  onClick={() => removeAt(i)}
-                  className="p-1 rounded-full hover:bg-destructive/30 text-secondary-foreground hover:text-destructive"
-                  data-testid={testId ? `${testId}-remove-${i}` : undefined}
-                  aria-label="Remove"
-                >
-                  <X className="h-3 w-3" strokeWidth={1.6} />
-                </button>
+                <div className="flex items-center gap-0.5">
+                  <button
+                    type="button"
+                    onClick={() => setEditingIdx(i)}
+                    className="p-1 rounded-full hover:bg-card"
+                    data-testid={testId ? `${testId}-adjust-${i}` : undefined}
+                    aria-label="Adjust focal point"
+                  >
+                    <Crosshair className="h-3 w-3" strokeWidth={1.6} />
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => removeAt(i)}
+                    className="p-1 rounded-full hover:bg-destructive/30 text-secondary-foreground hover:text-destructive"
+                    data-testid={testId ? `${testId}-remove-${i}` : undefined}
+                    aria-label="Remove"
+                  >
+                    <X className="h-3 w-3" strokeWidth={1.6} />
+                  </button>
+                </div>
               </div>
               <span className="absolute top-1 left-1 rounded-full bg-background/80 px-1.5 text-[9px] uppercase tracking-[1.5px]">
                 {i + 1}
@@ -202,6 +213,14 @@ export function GalleryPicker({
             </div>
           ))}
         </div>
+      )}
+
+      {editingIdx !== null && list[editingIdx] && (
+        <FocalEditor
+          url={list[editingIdx]}
+          onSave={(u) => setAt(editingIdx, u)}
+          onClose={() => setEditingIdx(null)}
+        />
       )}
     </div>
   );
