@@ -1,11 +1,62 @@
 import { motion } from "framer-motion";
 import { useState } from "react";
+import { toast } from "sonner";
 import { fadeUp } from "@/lib/motion";
 import { Phone, Mail, MapPin, ArrowRight } from "lucide-react";
+import { api } from "@/lib/api";
 import bg from "@/assets/contact-night.jpg";
 
 export function ContactSection() {
   const [sent, setSent] = useState(false);
+  const [busy, setBusy] = useState(false);
+  const [form, setForm] = useState({
+    name: "",
+    email: "",
+    phone: "",
+    interest: "",
+    message: "",
+  });
+
+  const update = (k: keyof typeof form) => (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
+    setForm((f) => ({ ...f, [k]: e.target.value }));
+
+  const onSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (busy) return;
+
+    const name = form.name.trim();
+    const email = form.email.trim();
+    const message = form.message.trim();
+
+    if (!name) { toast.error("Please enter your name."); return; }
+    if (name.length > 100) { toast.error("Name must be under 100 characters."); return; }
+    if (!email) { toast.error("Please enter your email."); return; }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { toast.error("Please enter a valid email address."); return; }
+    if (email.length > 255) { toast.error("Email is too long."); return; }
+    if (!message) { toast.error("Please share a short message."); return; }
+    if (message.length > 1000) { toast.error("Message must be under 1000 characters."); return; }
+    if (form.phone && form.phone.length > 40) { toast.error("Phone number is too long."); return; }
+    if (form.interest && form.interest.length > 150) { toast.error("Property interest is too long."); return; }
+
+    setBusy(true);
+    try {
+      await api.createInquiry({
+        name,
+        email,
+        phone: form.phone.trim() || undefined,
+        interest: form.interest.trim() || undefined,
+        message,
+        source: "contact",
+      });
+      toast.success("Thank you — we'll be in touch shortly.");
+      setSent(true);
+      setForm({ name: "", email: "", phone: "", interest: "", message: "" });
+    } catch (err: any) {
+      toast.error(err?.message || "Could not send your inquiry. Please try again.");
+    } finally {
+      setBusy(false);
+    }
+  };
 
   return (
     <section
@@ -50,11 +101,9 @@ export function ContactSection() {
         {/* Right form */}
         <motion.form
           {...fadeUp(0.1)}
-          onSubmit={(e) => {
-            e.preventDefault();
-            setSent(true);
-          }}
+          onSubmit={onSubmit}
           className="rounded-3xl bg-card/60 border border-border/60 p-8 md:p-12"
+          data-testid="contact-form"
         >
           <h3 className="text-2xl md:text-3xl font-light tracking-[-0.02em]">
             Private inquiry
@@ -64,20 +113,22 @@ export function ContactSection() {
           </p>
 
           <div className="mt-8 grid sm:grid-cols-2 gap-4">
-            <Input label="Name" />
-            <Input label="Email" type="email" />
-            <Input label="Phone" type="tel" />
-            <Input label="Property Interest" />
+            <Input label="Name" value={form.name} onChange={update("name")} required maxLength={100} testId="contact-name" />
+            <Input label="Email" type="email" value={form.email} onChange={update("email")} required maxLength={255} testId="contact-email" />
+            <Input label="Phone" type="tel" value={form.phone} onChange={update("phone")} maxLength={40} testId="contact-phone" />
+            <Input label="Property Interest" value={form.interest} onChange={update("interest")} maxLength={150} testId="contact-interest" />
             <div className="sm:col-span-2">
-              <Input label="Message" textarea />
+              <Input label="Message" textarea value={form.message} onChange={update("message")} required maxLength={1000} testId="contact-message" />
             </div>
           </div>
 
           <button
             type="submit"
-            className="mt-8 w-full md:w-auto inline-flex items-center justify-center gap-2 rounded-full bg-primary text-primary-foreground px-7 py-3.5 text-sm font-medium hover:scale-[1.02] transition-transform duration-500"
+            disabled={busy}
+            data-testid="contact-submit"
+            className="mt-8 w-full md:w-auto inline-flex items-center justify-center gap-2 rounded-full bg-primary text-primary-foreground px-7 py-3.5 text-sm font-medium hover:scale-[1.02] disabled:opacity-60 disabled:hover:scale-100 transition-transform duration-500"
           >
-            {sent ? "Request received" : "Request Consultation"}
+            {busy ? "Sending…" : sent ? "Request received" : "Request Consultation"}
             <ArrowRight className="h-3.5 w-3.5" strokeWidth={1.6} />
           </button>
         </motion.form>
@@ -90,24 +141,44 @@ function Input({
   label,
   type = "text",
   textarea = false,
+  value,
+  onChange,
+  required,
+  maxLength,
+  testId,
 }: {
   label: string;
   type?: string;
   textarea?: boolean;
+  value: string;
+  onChange: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
+  required?: boolean;
+  maxLength?: number;
+  testId?: string;
 }) {
   return (
     <label className="block">
       <span className="block text-[11px] uppercase tracking-[2.5px] text-muted-foreground mb-2">
-        {label}
+        {label}{required ? " *" : ""}
       </span>
       {textarea ? (
         <textarea
           rows={4}
+          value={value}
+          onChange={onChange}
+          required={required}
+          maxLength={maxLength}
+          data-testid={testId}
           className="w-full rounded-2xl bg-input/40 border border-border focus:border-accent/60 outline-none px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground transition-colors duration-500 focus:shadow-[0_0_0_4px_hsl(var(--accent)/0.08)]"
         />
       ) : (
         <input
           type={type}
+          value={value}
+          onChange={onChange}
+          required={required}
+          maxLength={maxLength}
+          data-testid={testId}
           className="w-full rounded-2xl bg-input/40 border border-border focus:border-accent/60 outline-none px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground transition-colors duration-500 focus:shadow-[0_0_0_4px_hsl(var(--accent)/0.08)]"
         />
       )}
