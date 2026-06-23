@@ -23,12 +23,14 @@ function AdminProperties() {
   const [rows, setRows] = useState<PropertyDTO[]>([]);
   const [editing, setEditing] = useState<Partial<PropertyDTO> | null>(null);
   const [isNew, setIsNew] = useState(false);
+  const [originalGallery, setOriginalGallery] = useState<string[]>([]);
+  const [originalCover, setOriginalCover] = useState<string>("");
 
   const reload = () => api.listProperties().then(setRows).catch(() => setRows([]));
   useEffect(() => { reload(); }, []);
 
-  const openNew = () => { setEditing({ ...EMPTY }); setIsNew(true); };
-  const openEdit = (p: PropertyDTO) => { setEditing({ ...p }); setIsNew(false); };
+  const openNew = () => { setEditing({ ...EMPTY }); setIsNew(true); setOriginalGallery([]); setOriginalCover(""); };
+  const openEdit = (p: PropertyDTO) => { setEditing({ ...p }); setIsNew(false); setOriginalGallery(p.gallery ?? []); setOriginalCover(p.cover ?? ""); };
 
   const save = async () => {
     if (!editing) return;
