@@ -123,7 +123,7 @@ function AdminPageEdit() {
           </label>
           <Field label="Nav order" type="number" value={String(page.navOrder)} onChange={(x) => set({ navOrder: parseInt(x) || 100 })} testId="page-navorder" />
         </div>
-        <ImagePicker label="Featured image (shown at top of the page)" value={page.cover} folder="pages" onChange={(url) => set({ cover: url })} testId="page-cover" />
+        <ImagePicker label="Featured image (shown at top of the page)" value={page.cover} folder="pages" onChange={(url) => set({ cover: url })} testId="page-cover" kind="pageHero" />
       </section>
 
       {/* Content (Markdown) */}
@@ -168,7 +168,7 @@ function AdminPageEdit() {
         <p className="text-[11px] uppercase tracking-[3px] text-accent">SEO (for Google & social sharing)</p>
         <div className="grid sm:grid-cols-2 gap-4">
           <Field label="Meta title" value={page.seo.title ?? ""} onChange={(x) => set({ seo: { ...page.seo, title: x } })} testId="seo-title" placeholder="Defaults to page title" />
-          <ImagePicker label="OG image (social sharing)" value={page.seo.ogImage} onChange={(url) => set({ seo: { ...page.seo, ogImage: url } })} folder="pages" testId="seo-og" />
+          <ImagePicker label="OG image (social sharing)" value={page.seo.ogImage} onChange={(url) => set({ seo: { ...page.seo, ogImage: url } })} folder="pages" testId="seo-og" kind="pageHero" />
         </div>
         <Field label="Meta description" value={page.seo.description ?? ""} onChange={(x) => set({ seo: { ...page.seo, description: x } })} textarea testId="seo-desc" placeholder="One concise sentence shown in Google results" />
       </section>

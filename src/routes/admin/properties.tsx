@@ -216,7 +216,7 @@ function PropertyEditor({
           <Field label="Bathrooms" type="number" value={String(v.bathrooms ?? 0)} onChange={(x) => set("bathrooms", parseInt(x) || 0)} testId="prop-bathrooms" />
           <Field label="Price label" value={v.priceLabel ?? ""} onChange={(x) => set("priceLabel", x)} testId="prop-price" />
           <div className="col-span-2">
-            <ImagePicker label="Cover image" value={v.cover} folder="properties" onChange={(url) => set("cover", url)} testId="prop-cover" />
+            <ImagePicker label="Cover image" value={v.cover} folder="properties" onChange={(url) => set("cover", url)} testId="prop-cover" kind="propertyCover" />
           </div>
           <div className="col-span-2">
             <Field label="Short description" value={v.shortDescription ?? ""} onChange={(x) => set("shortDescription", x)} textarea testId="prop-short" />
@@ -246,7 +246,7 @@ function PropertyEditor({
             <Field label="Meta description" value={v.seo?.description ?? ""} onChange={(x) => set("seo", { ...(v.seo ?? {}), description: x })} textarea testId="prop-seo-desc" placeholder="Defaults to short description" />
           </div>
           <div className="col-span-2">
-            <ImagePicker label="OG image (social sharing)" value={v.seo?.ogImage} folder="properties" onChange={(url) => set("seo", { ...(v.seo ?? {}), ogImage: url })} testId="prop-seo-og" />
+            <ImagePicker label="OG image (social sharing)" value={v.seo?.ogImage} folder="properties" onChange={(url) => set("seo", { ...(v.seo ?? {}), ogImage: url })} testId="prop-seo-og" kind="propertyCover" />
           </div>
         </div>
 

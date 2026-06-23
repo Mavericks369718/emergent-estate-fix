@@ -197,7 +197,7 @@ function BlogEditor({
           </label>
           <Field label="Read time" value={v.readTime ?? ""} onChange={(x) => set("readTime", x)} testId="blog-readtime" placeholder="5 min read" />
           <div className="col-span-2">
-            <ImagePicker label="Cover image" value={v.cover} folder="blogs" onChange={(url) => set("cover", url)} testId="blog-cover" />
+            <ImagePicker label="Cover image" value={v.cover} folder="blogs" onChange={(url) => set("cover", url)} testId="blog-cover" kind="blogCover" />
           </div>
           <Field label="Author" value={v.author ?? ""} onChange={(x) => set("author", x)} testId="blog-author" />
           <Field label="Author role" value={v.authorRole ?? ""} onChange={(x) => set("authorRole", x)} testId="blog-author-role" />
@@ -258,7 +258,7 @@ function BlogEditor({
           <p className="text-[11px] uppercase tracking-[3px] text-accent">SEO</p>
           <Field label="Meta title" value={v.seo?.title ?? ""} onChange={(x) => set("seo", { ...(v.seo ?? {}), title: x })} testId="blog-seo-title" placeholder="Defaults to blog title" />
           <Field label="Meta description" value={v.seo?.description ?? ""} onChange={(x) => set("seo", { ...(v.seo ?? {}), description: x })} textarea testId="blog-seo-desc" placeholder="Defaults to excerpt" />
-          <ImagePicker label="OG image (social sharing)" value={v.seo?.ogImage} folder="blogs" onChange={(url) => set("seo", { ...(v.seo ?? {}), ogImage: url })} testId="blog-seo-og" />
+          <ImagePicker label="OG image (social sharing)" value={v.seo?.ogImage} folder="blogs" onChange={(url) => set("seo", { ...(v.seo ?? {}), ogImage: url })} testId="blog-seo-og" kind="blogCover" />
         </div>
 
         <div className="mt-8 flex items-center justify-end gap-3">
