@@ -84,6 +84,7 @@
   * {
     border-color: hsl(var(--border));
     -webkit-font-smoothing: antialiased;
+    min-width: 0;
   }
 
   html, body {
@@ -91,6 +92,23 @@
     color: hsl(var(--foreground));
     font-family: 'Manrope', system-ui, sans-serif;
     font-weight: 400;
+    /* Defensive: never allow page-level horizontal scroll from runaway content */
+    overflow-x: clip;
+  }
+
+  /* Defensive wrapping for any user-generated text surface */
+  h1, h2, h3, h4, h5, h6,
+  p, li, dd, dt, blockquote, figcaption,
+  a, span, label, td, th {
+    overflow-wrap: anywhere;
+    word-break: break-word;
+    hyphens: auto;
+  }
+
+  /* Defensive image sizing: never let an <img> push its container wider */
+  img, video {
+    max-width: 100%;
+    height: auto;
   }
 
   ::selection {
