@@ -4,7 +4,9 @@ import { toast } from "sonner";
 import { Pencil, Trash2, Plus, X, Save, Star } from "lucide-react";
 import { AdminShell, PageHeader, Field } from "@/components/admin/AdminShell";
 import { ImagePicker } from "@/components/admin/ImagePicker";
+import { GalleryPicker } from "@/components/admin/GalleryPicker";
 import { api, type PropertyDTO } from "@/lib/api";
+import { cleanupOrphanImages } from "@/lib/imageCleanup";
 
 export const Route = createFileRoute("/admin/properties")({
   component: AdminProperties,
