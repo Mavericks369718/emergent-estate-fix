@@ -7,6 +7,7 @@ import remarkGfm from "remark-gfm";
 import { AdminShell, PageHeader, Field } from "@/components/admin/AdminShell";
 import { ImagePicker } from "@/components/admin/ImagePicker";
 import { api, ApiError, type PageDTO } from "@/lib/api";
+import { cleanupOrphanImages, extractMarkdownImageUrls } from "@/lib/imageCleanup";
 
 export const Route = createFileRoute("/admin/pages/$slug")({
   loader: async ({ params }) => {
