@@ -4,6 +4,7 @@ import { toast } from "sonner";
 import { Pencil, Trash2, Plus, ExternalLink } from "lucide-react";
 import { AdminShell, PageHeader } from "@/components/admin/AdminShell";
 import { api, type PageDTO } from "@/lib/api";
+import { cleanupOrphanImages, extractMarkdownImageUrls } from "@/lib/imageCleanup";
 
 export const Route = createFileRoute("/admin/pages")({
   component: AdminPages,
