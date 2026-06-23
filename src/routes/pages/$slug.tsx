@@ -1,4 +1,4 @@
-import { createFileRoute, notFound, Link } from "@tanstack/react-router";
+import { createFileRoute, notFound } from "@tanstack/react-router";
 import { motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 import { Navbar } from "@/components/site/Navbar";
@@ -144,23 +144,13 @@ function DynamicPage() {
               </p>
             )}
             <div className="mt-8">
-              {isExternal(cta.ctaUrl) ? (
-                <a
-                  href={cta.ctaUrl}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="inline-flex items-center gap-2 rounded-full bg-primary text-primary-foreground px-6 py-3 text-sm hover:scale-[1.02] transition-transform"
-                >
-                  {cta.ctaLabel} <ArrowRight className="h-4 w-4" />
-                </a>
-              ) : (
-                <Link
-                  to={cta.ctaUrl}
-                  className="inline-flex items-center gap-2 rounded-full bg-primary text-primary-foreground px-6 py-3 text-sm hover:scale-[1.02] transition-transform"
-                >
-                  {cta.ctaLabel} <ArrowRight className="h-4 w-4" />
-                </Link>
-              )}
+              <a
+                href={cta.ctaUrl}
+                {...(isExternal(cta.ctaUrl) ? { target: "_blank", rel: "noreferrer" } : {})}
+                className="inline-flex items-center gap-2 rounded-full bg-primary text-primary-foreground px-6 py-3 text-sm hover:scale-[1.02] transition-transform"
+              >
+                {cta.ctaLabel} <ArrowRight className="h-4 w-4" />
+              </a>
             </div>
           </div>
         </section>
