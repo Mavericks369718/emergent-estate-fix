@@ -111,7 +111,7 @@ function BlogReaderPage() {
           </p>
 
           <div className="mt-12 space-y-6 text-base md:text-lg text-secondary-foreground leading-[1.85]">
-            {post.body.map((block, i) =>
+            {post.body.map((block: any, i: number) =>
               block.type === "h2" ? (
                 <h2
                   key={i}
@@ -163,7 +163,7 @@ function BlogReaderPage() {
           </motion.h2>
 
           <div className="mt-12 md:mt-16 grid sm:grid-cols-2 lg:grid-cols-3 gap-5 md:gap-6">
-            {related.map((r, i) => (
+            {related.map((r: any, i: number) => (
               <motion.div
                 key={r.slug}
                 {...fadeUp(0.05 + i * 0.07)}

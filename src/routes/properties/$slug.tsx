@@ -91,7 +91,7 @@ function PropertyDetailPage() {
             className="mt-4 md:mt-5 flex gap-3 overflow-x-auto pb-2"
             data-testid="gallery-strip"
           >
-            {property.gallery.map((g, i) => (
+            {property.gallery.map((g: any, i: number) => (
               <button
                 key={g + i}
                 type="button"
@@ -176,7 +176,7 @@ function PropertyDetailPage() {
                 className="mt-6 grid sm:grid-cols-2 gap-x-8 gap-y-3"
                 data-testid="amenities-list"
               >
-                {property.amenities.map((a, i) => (
+                {property.amenities.map((a: any, i: number) => (
                   <li
                     key={a}
                     className="flex items-start gap-3 text-sm text-secondary-foreground"
