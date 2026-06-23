@@ -4,7 +4,9 @@ import { toast } from "sonner";
 import { Pencil, Trash2, Plus, X, Save, Star } from "lucide-react";
 import { AdminShell, PageHeader, Field } from "@/components/admin/AdminShell";
 import { ImagePicker } from "@/components/admin/ImagePicker";
+import { GalleryPicker } from "@/components/admin/GalleryPicker";
 import { api, type PropertyDTO } from "@/lib/api";
+import { cleanupOrphanImages } from "@/lib/imageCleanup";
 
 export const Route = createFileRoute("/admin/properties")({
   component: AdminProperties,
@@ -21,12 +23,14 @@ function AdminProperties() {
   const [rows, setRows] = useState<PropertyDTO[]>([]);
   const [editing, setEditing] = useState<Partial<PropertyDTO> | null>(null);
   const [isNew, setIsNew] = useState(false);
+  const [originalGallery, setOriginalGallery] = useState<string[]>([]);
+  const [originalCover, setOriginalCover] = useState<string>("");
 
   const reload = () => api.listProperties().then(setRows).catch(() => setRows([]));
   useEffect(() => { reload(); }, []);
 
-  const openNew = () => { setEditing({ ...EMPTY }); setIsNew(true); };
-  const openEdit = (p: PropertyDTO) => { setEditing({ ...p }); setIsNew(false); };
+  const openNew = () => { setEditing({ ...EMPTY }); setIsNew(true); setOriginalGallery([]); setOriginalCover(""); };
+  const openEdit = (p: PropertyDTO) => { setEditing({ ...p }); setIsNew(false); setOriginalGallery(p.gallery ?? []); setOriginalCover(p.cover ?? ""); };
 
   const save = async () => {
     if (!editing) return;
@@ -38,6 +42,14 @@ function AdminProperties() {
         await api.updateProperty(editing.slug!, editing);
         toast.success("Property updated");
       }
+      // Detect removed images and cleanup orphans (non-blocking).
+      const nextGallery = editing.gallery ?? [];
+      const nextCover = editing.cover ?? "";
+      const removed = [
+        ...originalGallery.filter((u) => !nextGallery.includes(u)),
+        ...(originalCover && originalCover !== nextCover ? [originalCover] : []),
+      ];
+      if (removed.length) cleanupOrphanImages(removed);
       setEditing(null);
       reload();
     } catch (err: any) {
@@ -62,8 +74,10 @@ function AdminProperties() {
   const remove = async (p: PropertyDTO) => {
     if (!confirm(`Delete "${p.title}"? This cannot be undone.`)) return;
     try {
+      const orphans = [p.cover, ...(p.gallery ?? [])];
       await api.deleteProperty(p.slug);
       toast.success("Property deleted");
+      cleanupOrphanImages(orphans);
       reload();
     } catch (err: any) { toast.error(err?.message); }
   };
@@ -214,7 +228,7 @@ function PropertyEditor({
             <Field label="Amenities (one per line)" value={(v.amenities ?? []).join("\n")} onChange={(x) => set("amenities", x.split("\n").map(s => s.trim()).filter(Boolean))} textarea testId="prop-amenities" />
           </div>
           <div className="col-span-2">
-            <Field label="Gallery (image keys/URLs, one per line)" value={(v.gallery ?? []).join("\n")} onChange={(x) => set("gallery", x.split("\n").map(s => s.trim()).filter(Boolean))} textarea testId="prop-gallery" />
+            <GalleryPicker value={v.gallery ?? []} onChange={(g) => set("gallery", g)} folder="properties" max={10} testId="prop-gallery" />
           </div>
           <label className="col-span-2 inline-flex items-center gap-3 text-sm">
             <input type="checkbox" checked={!!v.featured} onChange={(e) => set("featured", e.target.checked)} data-testid="prop-featured" className="h-4 w-4 accent-accent" />
