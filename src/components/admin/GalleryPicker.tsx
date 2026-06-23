@@ -1,8 +1,10 @@
 import { useRef, useState } from "react";
 import { toast } from "sonner";
-import { Upload, X, Loader2, ArrowLeft, ArrowRight } from "lucide-react";
+import { Upload, X, Loader2, ArrowLeft, ArrowRight, Crosshair } from "lucide-react";
 import { api } from "@/lib/api";
 import { img } from "@/lib/imageMap";
+import { focalStyle, readImageSize, validateImage } from "@/lib/imageFocal";
+import { FocalEditor } from "./FocalEditor";
 
 type Folder = "properties" | "blogs" | "founder" | "pages" | "misc";
 
