@@ -143,19 +143,27 @@ function AdminPages() {
                   </button>
                 </td>
                 <td className="px-5 py-4 text-right">
-                  <a href={`/pages/${p.slug}`} target="_blank" rel="noreferrer" data-testid={`page-preview-${i}`}
-                    className="inline-flex items-center justify-center h-8 w-8 rounded-full hover:bg-card text-secondary-foreground hover:text-foreground transition-colors">
-                    <ExternalLink className="h-3.5 w-3.5" strokeWidth={1.4} />
-                  </a>
-                  <Link to="/admin/pages/$slug" params={{ slug: p.slug }} data-testid={`page-edit-${i}`}
-                    className="ml-1 inline-flex items-center justify-center h-8 w-8 rounded-full hover:bg-card text-secondary-foreground hover:text-foreground transition-colors">
-                    <Pencil className="h-3.5 w-3.5" strokeWidth={1.4} />
-                  </Link>
-                  <button onClick={() => remove(p)} data-testid={`page-delete-${i}`}
-                    className="ml-1 inline-flex items-center justify-center h-8 w-8 rounded-full hover:bg-destructive/20 text-secondary-foreground hover:text-destructive transition-colors">
-                    <Trash2 className="h-3.5 w-3.5" strokeWidth={1.4} />
-                  </button>
+                  <div className="inline-flex items-center gap-2">
+                    <Link to="/admin/pages/$slug" params={{ slug: p.slug }} data-testid={`page-edit-${i}`}
+                      title="Edit this page"
+                      className="inline-flex items-center gap-1.5 rounded-full bg-primary text-primary-foreground px-3.5 py-1.5 text-xs hover:scale-[1.02] transition-transform">
+                      <Pencil className="h-3.5 w-3.5" strokeWidth={1.6} /> Edit
+                    </Link>
+                    <a href={`/pages/${p.slug}`} target="_blank" rel="noreferrer" data-testid={`page-preview-${i}`}
+                      title="Open the live page in a new tab"
+                      aria-label="Open live page"
+                      className="inline-flex items-center justify-center h-8 w-8 rounded-full liquid-glass text-secondary-foreground hover:text-foreground transition-colors">
+                      <ExternalLink className="h-3.5 w-3.5" strokeWidth={1.4} />
+                    </a>
+                    <button onClick={() => remove(p)} data-testid={`page-delete-${i}`}
+                      title="Delete this page"
+                      aria-label="Delete page"
+                      className="inline-flex items-center justify-center h-8 w-8 rounded-full liquid-glass text-secondary-foreground hover:bg-destructive/20 hover:text-destructive transition-colors">
+                      <Trash2 className="h-3.5 w-3.5" strokeWidth={1.4} />
+                    </button>
+                  </div>
                 </td>
+
               </tr>
             ))}
             {rows.length === 0 && (
