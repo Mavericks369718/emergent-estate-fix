@@ -1,12 +1,13 @@
 import { createFileRoute, useNavigate, notFound } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
-import { Save, ArrowLeft, ExternalLink, Eye, Pencil } from "lucide-react";
+import { Save, ArrowLeft, ExternalLink, Eye, Pencil, ImagePlus, Plus, Trash2, Loader2 } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { AdminShell, PageHeader, Field } from "@/components/admin/AdminShell";
 import { ImagePicker } from "@/components/admin/ImagePicker";
-import { api, ApiError, type PageDTO } from "@/lib/api";
+import { GalleryPicker } from "@/components/admin/GalleryPicker";
+import { api, ApiError, type PageDTO, type PageSection } from "@/lib/api";
 import { cleanupOrphanImages, extractMarkdownImageUrls } from "@/lib/imageCleanup";
 
 export const Route = createFileRoute("/admin/pages/$slug")({
@@ -22,18 +23,51 @@ export const Route = createFileRoute("/admin/pages/$slug")({
   component: AdminPageEdit,
 });
 
+// Stable IDs so we can find-and-replace the optional gallery/cta blocks.
+const GALLERY_ID = "page-gallery";
+const CTA_ID = "page-cta";
+
+type GallerySection = Extract<PageSection, { type: "gallery" }>;
+type CtaSection = Extract<PageSection, { type: "cta" }>;
+
+function findSection<T extends PageSection["type"]>(
+  sections: PageSection[],
+  type: T,
+): Extract<PageSection, { type: T }> | undefined {
+  return sections.find((s) => s.type === type) as any;
+}
+
+function upsertSection(sections: PageSection[], next: PageSection): PageSection[] {
+  const i = sections.findIndex((s) => s.id === next.id);
+  if (i === -1) return [...sections, next];
+  const copy = sections.slice();
+  copy[i] = next;
+  return copy;
+}
+
+function removeSection(sections: PageSection[], id: string): PageSection[] {
+  return sections.filter((s) => s.id !== id);
+}
+
 function AdminPageEdit() {
   const { page: initial } = Route.useLoaderData() as { page: PageDTO };
   const navigate = useNavigate();
   const [page, setPage] = useState<PageDTO>(initial);
   const [busy, setBusy] = useState(false);
   const [tab, setTab] = useState<"write" | "preview">("write");
+  const [insertingImage, setInsertingImage] = useState(false);
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const insertInputRef = useRef<HTMLInputElement>(null);
   const lastSavedAt = useRef<number>(Date.now());
 
-  // Re-sync ONCE if the loader gives us a different slug (back/forward nav).
   useEffect(() => { setPage(initial); }, [initial.slug]);
 
   const set = (patch: Partial<PageDTO>) => setPage((p) => ({ ...p, ...patch }));
+  const setHero = (patch: Partial<PageDTO["hero"]>) =>
+    setPage((p) => ({ ...p, hero: { ...p.hero, ...patch } }));
+
+  const gallery = findSection(page.sections, "gallery") as GallerySection | undefined;
+  const cta = findSection(page.sections, "cta") as CtaSection | undefined;
 
   const save = async () => {
     setBusy(true);
@@ -41,6 +75,7 @@ function AdminPageEdit() {
     const prevOg = page.seo?.ogImage ?? "";
     const prevHero = page.hero?.image ?? "";
     const prevMdImgs = extractMarkdownImageUrls(initial.content);
+    const prevGallery = (findSection(initial.sections, "gallery") as GallerySection | undefined)?.images ?? [];
     try {
       const saved = await api.updatePage(page.slug, {
         title: page.title,
@@ -49,15 +84,18 @@ function AdminPageEdit() {
         navOrder: page.navOrder,
         cover: page.cover,
         content: page.content,
-        hero: { ...page.hero, title: page.title }, // keep hero.title in sync
+        hero: page.hero,
+        sections: page.sections,
         seo: page.seo,
       });
       const nextMdImgs = extractMarkdownImageUrls(saved.content);
+      const nextGallery = (findSection(saved.sections, "gallery") as GallerySection | undefined)?.images ?? [];
       const removed = [
         ...(prevCover && prevCover !== saved.cover ? [prevCover] : []),
         ...(prevOg && prevOg !== (saved.seo?.ogImage ?? "") ? [prevOg] : []),
         ...(prevHero && prevHero !== (saved.hero?.image ?? "") ? [prevHero] : []),
         ...prevMdImgs.filter((u) => !nextMdImgs.includes(u)),
+        ...prevGallery.filter((u) => !nextGallery.includes(u)),
       ];
       if (removed.length) cleanupOrphanImages(removed);
       setPage(saved);
@@ -70,7 +108,6 @@ function AdminPageEdit() {
     }
   };
 
-  // Save on Ctrl/Cmd+S
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       if ((e.ctrlKey || e.metaKey) && e.key === "s") { e.preventDefault(); save(); }
@@ -79,6 +116,64 @@ function AdminPageEdit() {
     return () => window.removeEventListener("keydown", onKey);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [page]);
+
+  // Insert markdown image at cursor (or at end) after uploading a file.
+  const handleInsertImage = async (file: File | null | undefined) => {
+    if (!file) return;
+    setInsertingImage(true);
+    try {
+      const res = await api.uploadImage(file, "pages");
+      const snippet = `\n\n![${file.name.replace(/\.[a-z0-9]+$/i, "")}](${res.url})\n\n`;
+      const ta = textareaRef.current;
+      const current = page.content || "";
+      let next = current + snippet;
+      let cursor = next.length;
+      if (ta) {
+        const start = ta.selectionStart ?? current.length;
+        const end = ta.selectionEnd ?? current.length;
+        next = current.slice(0, start) + snippet + current.slice(end);
+        cursor = start + snippet.length;
+      }
+      set({ content: next });
+      // restore focus + caret after React re-renders
+      requestAnimationFrame(() => {
+        const el = textareaRef.current;
+        if (el) { el.focus(); el.setSelectionRange(cursor, cursor); }
+      });
+      toast.success("Image inserted");
+    } catch (e: any) {
+      toast.error(e?.message || "Upload failed");
+    } finally {
+      setInsertingImage(false);
+      if (insertInputRef.current) insertInputRef.current.value = "";
+    }
+  };
+
+  const addGallery = () => {
+    if (gallery) return;
+    set({ sections: upsertSection(page.sections, { id: GALLERY_ID, type: "gallery", title: "Gallery", images: [] }) });
+  };
+  const updateGallery = (patch: Partial<GallerySection>) => {
+    if (!gallery) return;
+    set({ sections: upsertSection(page.sections, { ...gallery, ...patch }) });
+  };
+  const removeGalleryBlock = () => {
+    set({ sections: removeSection(page.sections, GALLERY_ID) });
+  };
+
+  const addCta = () => {
+    if (cta) return;
+    set({ sections: upsertSection(page.sections, {
+      id: CTA_ID, type: "cta", title: "Get in touch", body: "", ctaLabel: "Contact us", ctaUrl: "/contact",
+    })});
+  };
+  const updateCta = (patch: Partial<CtaSection>) => {
+    if (!cta) return;
+    set({ sections: upsertSection(page.sections, { ...cta, ...patch }) });
+  };
+  const removeCtaBlock = () => {
+    set({ sections: removeSection(page.sections, CTA_ID) });
+  };
 
   return (
     <AdminShell>
@@ -107,7 +202,7 @@ function AdminPageEdit() {
       <section className="rounded-3xl bg-card/60 border border-border/60 p-6 md:p-8 mb-6 space-y-5" data-testid="page-meta">
         <div className="grid sm:grid-cols-2 gap-4">
           <Field label="Title" value={page.title} onChange={(x) => set({ title: x })} testId="page-title-input" />
-          <Field label="Slug" value={page.slug} onChange={() => { /* slug is immutable post-create */ }} testId="page-slug-readonly" placeholder="/pages/<slug>" />
+          <Field label="Slug" value={page.slug} onChange={() => {}} testId="page-slug-readonly" placeholder="/pages/<slug>" />
         </div>
         <div className="grid sm:grid-cols-3 gap-4">
           <label className="block">
@@ -126,25 +221,66 @@ function AdminPageEdit() {
         <ImagePicker label="Featured image (shown at top of the page)" value={page.cover} folder="pages" onChange={(url) => set({ cover: url })} testId="page-cover" kind="pageHero" />
       </section>
 
+      {/* Hero */}
+      <section className="rounded-3xl bg-card/60 border border-border/60 p-6 md:p-8 mb-6 space-y-5" data-testid="page-hero">
+        <p className="text-[11px] uppercase tracking-[3px] text-accent">Hero</p>
+        <div className="grid sm:grid-cols-2 gap-4">
+          <Field
+            label="Hero title (optional — falls back to page title)"
+            value={page.hero?.title ?? ""}
+            onChange={(x) => setHero({ title: x })}
+            testId="page-hero-title"
+            placeholder={page.title}
+          />
+          <Field
+            label="Hero subtitle"
+            value={page.hero?.subtitle ?? ""}
+            onChange={(x) => setHero({ subtitle: x })}
+            testId="page-hero-subtitle"
+            placeholder="A short tagline shown under the title"
+          />
+        </div>
+      </section>
+
       {/* Content (Markdown) */}
       <section className="rounded-3xl bg-card/60 border border-border/60 p-6 md:p-8 mb-6" data-testid="page-content-editor">
-        <div className="flex items-center justify-between mb-4">
+        <div className="flex items-center justify-between mb-4 gap-3 flex-wrap">
           <p className="text-[11px] uppercase tracking-[3px] text-accent">Content</p>
-          <div className="flex items-center gap-1 rounded-full bg-input/30 p-1">
-            <button onClick={() => setTab("write")} data-testid="page-content-tab-write"
-              className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs transition-colors ${tab==="write" ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:text-foreground"}`}>
-              <Pencil className="h-3 w-3" /> Write
+          <div className="flex items-center gap-2">
+            <button
+              type="button"
+              onClick={() => insertInputRef.current?.click()}
+              disabled={insertingImage}
+              data-testid="page-content-insert-image"
+              className="inline-flex items-center gap-1.5 rounded-full liquid-glass px-3 py-1.5 text-xs disabled:opacity-60"
+            >
+              {insertingImage ? <Loader2 className="h-3 w-3 animate-spin" /> : <ImagePlus className="h-3 w-3" />}
+              {insertingImage ? "Uploading…" : "Insert image"}
             </button>
-            <button onClick={() => setTab("preview")} data-testid="page-content-tab-preview"
-              className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs transition-colors ${tab==="preview" ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:text-foreground"}`}>
-              <Eye className="h-3 w-3" /> Preview
-            </button>
+            <input
+              ref={insertInputRef}
+              type="file"
+              accept="image/*"
+              className="hidden"
+              onChange={(e) => handleInsertImage(e.target.files?.[0])}
+            />
+            <div className="flex items-center gap-1 rounded-full bg-input/30 p-1">
+              <button onClick={() => setTab("write")} data-testid="page-content-tab-write"
+                className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs transition-colors ${tab==="write" ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:text-foreground"}`}>
+                <Pencil className="h-3 w-3" /> Write
+              </button>
+              <button onClick={() => setTab("preview")} data-testid="page-content-tab-preview"
+                className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs transition-colors ${tab==="preview" ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:text-foreground"}`}>
+                <Eye className="h-3 w-3" /> Preview
+              </button>
+            </div>
           </div>
         </div>
 
         {tab === "write" ? (
           <>
             <textarea
+              ref={textareaRef}
               value={page.content}
               onChange={(e) => set({ content: e.target.value })}
               placeholder={"# Heading\n\nWrite your page in **Markdown**.\n\n## Smaller heading\n\n- Bullet point\n- Another point\n\n[Link](https://example.com)"}
@@ -153,13 +289,80 @@ function AdminPageEdit() {
               className="w-full rounded-xl bg-input/40 border border-border focus:border-accent/60 outline-none px-4 py-3 text-sm font-mono text-foreground placeholder:text-muted-foreground/50 leading-relaxed resize-y min-h-[400px]"
             />
             <p className="mt-3 text-xs text-muted-foreground">
-              Markdown shortcuts: <code className="text-foreground"># Heading</code>, <code className="text-foreground">**bold**</code>, <code className="text-foreground">_italic_</code>, <code className="text-foreground">- list</code>, <code className="text-foreground">[link](url)</code>, <code className="text-foreground">![image alt](url)</code>. Press <kbd className="text-foreground">Ctrl/Cmd&nbsp;+&nbsp;S</kbd> to save.
+              Markdown shortcuts: <code className="text-foreground"># Heading</code>, <code className="text-foreground">**bold**</code>, <code className="text-foreground">_italic_</code>, <code className="text-foreground">- list</code>, <code className="text-foreground">[link](url)</code>. Use <strong className="text-foreground">Insert image</strong> above to upload and embed pictures inline. Press <kbd className="text-foreground">Ctrl/Cmd&nbsp;+&nbsp;S</kbd> to save.
             </p>
           </>
         ) : (
           <article className="rounded-xl bg-background/50 border border-border/40 p-6 prose-page" data-testid="page-content-preview-pane">
             <MarkdownView source={page.content} />
           </article>
+        )}
+      </section>
+
+      {/* Optional Gallery block */}
+      <section className="rounded-3xl bg-card/60 border border-border/60 p-6 md:p-8 mb-6" data-testid="page-gallery-block">
+        <div className="flex items-center justify-between mb-4">
+          <div>
+            <p className="text-[11px] uppercase tracking-[3px] text-accent">Gallery block (optional)</p>
+            <p className="text-xs text-muted-foreground mt-1">Shown as a grid after the main content.</p>
+          </div>
+          {gallery ? (
+            <button onClick={removeGalleryBlock} data-testid="page-gallery-remove"
+              className="inline-flex items-center gap-1.5 rounded-full liquid-glass px-3 py-1.5 text-xs text-destructive">
+              <Trash2 className="h-3 w-3" /> Remove gallery
+            </button>
+          ) : (
+            <button onClick={addGallery} data-testid="page-gallery-add"
+              className="inline-flex items-center gap-1.5 rounded-full liquid-glass px-3 py-1.5 text-xs">
+              <Plus className="h-3 w-3" /> Add gallery
+            </button>
+          )}
+        </div>
+        {gallery && (
+          <div className="space-y-4">
+            <Field label="Gallery heading" value={gallery.title ?? ""} onChange={(x) => updateGallery({ title: x })} testId="page-gallery-title" placeholder="Gallery" />
+            <GalleryPicker
+              label="Images"
+              value={gallery.images}
+              onChange={(images) => updateGallery({ images })}
+              folder="pages"
+              testId="page-gallery-images"
+              max={12}
+            />
+          </div>
+        )}
+      </section>
+
+      {/* Optional CTA block */}
+      <section className="rounded-3xl bg-card/60 border border-border/60 p-6 md:p-8 mb-6" data-testid="page-cta-block">
+        <div className="flex items-center justify-between mb-4">
+          <div>
+            <p className="text-[11px] uppercase tracking-[3px] text-accent">Call-to-action block (optional)</p>
+            <p className="text-xs text-muted-foreground mt-1">A prompt with a button shown near the bottom of the page.</p>
+          </div>
+          {cta ? (
+            <button onClick={removeCtaBlock} data-testid="page-cta-remove"
+              className="inline-flex items-center gap-1.5 rounded-full liquid-glass px-3 py-1.5 text-xs text-destructive">
+              <Trash2 className="h-3 w-3" /> Remove CTA
+            </button>
+          ) : (
+            <button onClick={addCta} data-testid="page-cta-add"
+              className="inline-flex items-center gap-1.5 rounded-full liquid-glass px-3 py-1.5 text-xs">
+              <Plus className="h-3 w-3" /> Add CTA
+            </button>
+          )}
+        </div>
+        {cta && (
+          <div className="grid sm:grid-cols-2 gap-4">
+            <Field label="Heading" value={cta.title} onChange={(x) => updateCta({ title: x })} testId="page-cta-title" />
+            <Field label="Button label" value={cta.ctaLabel} onChange={(x) => updateCta({ ctaLabel: x })} testId="page-cta-label" />
+            <div className="sm:col-span-2">
+              <Field label="Supporting text" value={cta.body ?? ""} onChange={(x) => updateCta({ body: x })} textarea testId="page-cta-body" placeholder="One short sentence under the heading" />
+            </div>
+            <div className="sm:col-span-2">
+              <Field label="Button URL" value={cta.ctaUrl} onChange={(x) => updateCta({ ctaUrl: x })} testId="page-cta-url" placeholder="/contact" />
+            </div>
+          </div>
         )}
       </section>
 
