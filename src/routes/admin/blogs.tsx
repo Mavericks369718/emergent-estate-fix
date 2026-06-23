@@ -77,7 +77,7 @@ function AdminBlogs() {
     <AdminShell>
       <PageHeader eyebrow="Manage" title="Essays"
         action={
-          <button onClick={() => { setEditing({ ...EMPTY }); setIsNew(true); }} data-testid="admin-blog-new"
+          <button onClick={openNew} data-testid="admin-blog-new"
             className="inline-flex items-center gap-2 rounded-full bg-primary text-primary-foreground px-5 py-2.5 text-sm hover:scale-[1.02] transition-transform">
             <Plus className="h-3.5 w-3.5" /> New essay
           </button>
