@@ -5,6 +5,7 @@ import { Pencil, Trash2, Plus, X, Save, ArrowUp, ArrowDown } from "lucide-react"
 import { AdminShell, PageHeader, Field } from "@/components/admin/AdminShell";
 import { ImagePicker } from "@/components/admin/ImagePicker";
 import { api, type BlogDTO, type BlogBlockDTO } from "@/lib/api";
+import { cleanupOrphanImages } from "@/lib/imageCleanup";
 
 export const Route = createFileRoute("/admin/blogs")({
   component: AdminBlogs,
