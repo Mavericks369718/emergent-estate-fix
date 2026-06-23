@@ -58,8 +58,20 @@ function AdminPages() {
   const remove = async (p: PageDTO) => {
     if (!confirm(`Delete "${p.title}"?`)) return;
     try {
+      const orphans = [
+        p.cover,
+        p.seo?.ogImage,
+        p.hero?.image,
+        ...extractMarkdownImageUrls(p.content),
+        ...((p.sections || []).flatMap((s: any) => {
+          if (s?.type === "gallery" && Array.isArray(s.images)) return s.images;
+          if (s?.type === "feature" && s.image) return [s.image];
+          return [];
+        }) as string[]),
+      ];
       await api.deletePage(p.slug);
       toast.success("Page deleted");
+      cleanupOrphanImages(orphans);
       reload();
     } catch (e: any) { toast.error(e?.message); }
   };
