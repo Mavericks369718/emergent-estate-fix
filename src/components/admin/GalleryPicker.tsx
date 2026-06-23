@@ -27,6 +27,13 @@ export function GalleryPicker({
   const inputRef = useRef<HTMLInputElement>(null);
   const [busy, setBusy] = useState(false);
   const [dragIdx, setDragIdx] = useState<number | null>(null);
+  const [editingIdx, setEditingIdx] = useState<number | null>(null);
+
+  const setAt = (i: number, url: string) => {
+    const next = [...list];
+    next[i] = url;
+    onChange(next);
+  };
 
   const remaining = Math.max(0, max - list.length);
 
@@ -50,6 +57,11 @@ export function GalleryPicker({
         continue;
       }
       try {
+        const dim = await readImageSize(file).catch(() => null);
+        if (dim) {
+          const v = validateImage(dim, "propertyGallery");
+          v.warnings.forEach((w) => toast.warning(`${file.name}: ${w}`));
+        }
         const res = await api.uploadImage(file, folder);
         next.push(res.url);
       } catch (e: any) {
