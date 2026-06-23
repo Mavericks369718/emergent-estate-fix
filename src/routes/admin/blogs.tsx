@@ -5,6 +5,7 @@ import { Pencil, Trash2, Plus, X, Save, ArrowUp, ArrowDown } from "lucide-react"
 import { AdminShell, PageHeader, Field } from "@/components/admin/AdminShell";
 import { ImagePicker } from "@/components/admin/ImagePicker";
 import { api, type BlogDTO, type BlogBlockDTO } from "@/lib/api";
+import { cleanupOrphanImages } from "@/lib/imageCleanup";
 
 export const Route = createFileRoute("/admin/blogs")({
   component: AdminBlogs,
@@ -21,9 +22,14 @@ function AdminBlogs() {
   const [rows, setRows] = useState<BlogDTO[]>([]);
   const [editing, setEditing] = useState<Partial<BlogDTO> | null>(null);
   const [isNew, setIsNew] = useState(false);
+  const [originalCover, setOriginalCover] = useState<string>("");
+  const [originalOg, setOriginalOg] = useState<string>("");
 
   const reload = () => api.listBlogs().then(setRows).catch(() => setRows([]));
   useEffect(() => { reload(); }, []);
+
+  const openNew = () => { setEditing({ ...EMPTY }); setIsNew(true); setOriginalCover(""); setOriginalOg(""); };
+  const openEdit = (b: BlogDTO) => { setEditing({ ...b }); setIsNew(false); setOriginalCover(b.cover ?? ""); setOriginalOg(b.seo?.ogImage ?? ""); };
 
   const save = async () => {
     if (!editing) return;
@@ -35,6 +41,13 @@ function AdminBlogs() {
         await api.updateBlog(editing.slug!, editing);
         toast.success("Essay updated");
       }
+      const nextCover = editing.cover ?? "";
+      const nextOg = editing.seo?.ogImage ?? "";
+      const removed = [
+        ...(originalCover && originalCover !== nextCover ? [originalCover] : []),
+        ...(originalOg && originalOg !== nextOg ? [originalOg] : []),
+      ];
+      if (removed.length) cleanupOrphanImages(removed);
       setEditing(null);
       reload();
     } catch (err: any) {
@@ -52,8 +65,10 @@ function AdminBlogs() {
   const remove = async (b: BlogDTO) => {
     if (!confirm(`Delete "${b.title}"?`)) return;
     try {
+      const orphans = [b.cover, b.seo?.ogImage];
       await api.deleteBlog(b.slug);
       toast.success("Essay deleted");
+      cleanupOrphanImages(orphans);
       reload();
     } catch (err: any) { toast.error(err?.message); }
   };
@@ -62,7 +77,7 @@ function AdminBlogs() {
     <AdminShell>
       <PageHeader eyebrow="Manage" title="Essays"
         action={
-          <button onClick={() => { setEditing({ ...EMPTY }); setIsNew(true); }} data-testid="admin-blog-new"
+          <button onClick={openNew} data-testid="admin-blog-new"
             className="inline-flex items-center gap-2 rounded-full bg-primary text-primary-foreground px-5 py-2.5 text-sm hover:scale-[1.02] transition-transform">
             <Plus className="h-3.5 w-3.5" /> New essay
           </button>
@@ -98,7 +113,7 @@ function AdminBlogs() {
                   </button>
                 </td>
                 <td className="px-5 py-4 text-right">
-                  <button onClick={() => { setEditing({ ...b }); setIsNew(false); }} data-testid={`blog-edit-${i}`}
+                  <button onClick={() => openEdit(b)} data-testid={`blog-edit-${i}`}
                     className="inline-flex items-center justify-center h-8 w-8 rounded-full hover:bg-card text-secondary-foreground hover:text-foreground transition-colors">
                     <Pencil className="h-3.5 w-3.5" strokeWidth={1.4} />
                   </button>

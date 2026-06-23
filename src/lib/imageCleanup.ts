@@ -13,6 +13,18 @@ import { supabase, SUPABASE_BUCKET } from "./supabase";
  *
  * Failures are swallowed and logged — we never block a CMS save on cleanup.
  */
+/** Extract every image URL from a Markdown blob — `![alt](url)` and raw `<img src="…">`. */
+export function extractMarkdownImageUrls(md: string | undefined | null): string[] {
+  if (!md) return [];
+  const urls: string[] = [];
+  const mdRe = /!\[[^\]]*\]\(([^)\s]+)(?:\s+"[^"]*")?\)/g;
+  const imgRe = /<img\b[^>]*\bsrc=["']([^"']+)["']/gi;
+  let m: RegExpExecArray | null;
+  while ((m = mdRe.exec(md))) urls.push(m[1]);
+  while ((m = imgRe.exec(md))) urls.push(m[1]);
+  return urls;
+}
+
 export async function cleanupOrphanImages(candidates: (string | undefined | null)[]) {
   const unique = Array.from(
     new Set(
