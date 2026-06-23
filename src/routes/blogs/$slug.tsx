@@ -6,6 +6,7 @@ import { Footer } from "@/components/site/Footer";
 import { fadeUp } from "@/lib/motion";
 import { api, ApiError } from "@/lib/api";
 import { img } from "@/lib/imageMap";
+import { focalStyle } from "@/lib/imageFocal";
 
 export const Route = createFileRoute("/blogs/$slug")({
   loader: async ({ params }) => {
@@ -63,6 +64,7 @@ function BlogReaderPage() {
                 src={img(post.cover)}
                 alt={post.title}
                 className="h-full w-full object-cover"
+                style={focalStyle(post.cover)}
                 loading="eager"
               />
             </div>
