@@ -28,7 +28,7 @@ export function withFocal(url: string, focal: Focal): string {
   return `${base}#focal=${round(focal.x)},${round(focal.y)}`;
 }
 
-export function focalStyle(url?: string | null): React.CSSProperties {
+export function focalStyle(url?: string | null): { objectPosition: string } {
   const f = parseFocal(url);
   return { objectPosition: `${f.x}% ${f.y}%` };
 }
