@@ -113,7 +113,7 @@ function AdminBlogs() {
                   </button>
                 </td>
                 <td className="px-5 py-4 text-right">
-                  <button onClick={() => { setEditing({ ...b }); setIsNew(false); }} data-testid={`blog-edit-${i}`}
+                  <button onClick={() => openEdit(b)} data-testid={`blog-edit-${i}`}
                     className="inline-flex items-center justify-center h-8 w-8 rounded-full hover:bg-card text-secondary-foreground hover:text-foreground transition-colors">
                     <Pencil className="h-3.5 w-3.5" strokeWidth={1.4} />
                   </button>
