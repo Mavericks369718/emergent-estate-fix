@@ -22,9 +22,14 @@ function AdminBlogs() {
   const [rows, setRows] = useState<BlogDTO[]>([]);
   const [editing, setEditing] = useState<Partial<BlogDTO> | null>(null);
   const [isNew, setIsNew] = useState(false);
+  const [originalCover, setOriginalCover] = useState<string>("");
+  const [originalOg, setOriginalOg] = useState<string>("");
 
   const reload = () => api.listBlogs().then(setRows).catch(() => setRows([]));
   useEffect(() => { reload(); }, []);
+
+  const openNew = () => { setEditing({ ...EMPTY }); setIsNew(true); setOriginalCover(""); setOriginalOg(""); };
+  const openEdit = (b: BlogDTO) => { setEditing({ ...b }); setIsNew(false); setOriginalCover(b.cover ?? ""); setOriginalOg(b.seo?.ogImage ?? ""); };
 
   const save = async () => {
     if (!editing) return;
@@ -36,6 +41,13 @@ function AdminBlogs() {
         await api.updateBlog(editing.slug!, editing);
         toast.success("Essay updated");
       }
+      const nextCover = editing.cover ?? "";
+      const nextOg = editing.seo?.ogImage ?? "";
+      const removed = [
+        ...(originalCover && originalCover !== nextCover ? [originalCover] : []),
+        ...(originalOg && originalOg !== nextOg ? [originalOg] : []),
+      ];
+      if (removed.length) cleanupOrphanImages(removed);
       setEditing(null);
       reload();
     } catch (err: any) {
@@ -53,8 +65,10 @@ function AdminBlogs() {
   const remove = async (b: BlogDTO) => {
     if (!confirm(`Delete "${b.title}"?`)) return;
     try {
+      const orphans = [b.cover, b.seo?.ogImage];
       await api.deleteBlog(b.slug);
       toast.success("Essay deleted");
+      cleanupOrphanImages(orphans);
       reload();
     } catch (err: any) { toast.error(err?.message); }
   };
