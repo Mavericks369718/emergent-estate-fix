@@ -37,6 +37,10 @@ function AdminPageEdit() {
 
   const save = async () => {
     setBusy(true);
+    const prevCover = page.cover;
+    const prevOg = page.seo?.ogImage ?? "";
+    const prevHero = page.hero?.image ?? "";
+    const prevMdImgs = extractMarkdownImageUrls(initial.content);
     try {
       const saved = await api.updatePage(page.slug, {
         title: page.title,
@@ -48,6 +52,14 @@ function AdminPageEdit() {
         hero: { ...page.hero, title: page.title }, // keep hero.title in sync
         seo: page.seo,
       });
+      const nextMdImgs = extractMarkdownImageUrls(saved.content);
+      const removed = [
+        ...(prevCover && prevCover !== saved.cover ? [prevCover] : []),
+        ...(prevOg && prevOg !== (saved.seo?.ogImage ?? "") ? [prevOg] : []),
+        ...(prevHero && prevHero !== (saved.hero?.image ?? "") ? [prevHero] : []),
+        ...prevMdImgs.filter((u) => !nextMdImgs.includes(u)),
+      ];
+      if (removed.length) cleanupOrphanImages(removed);
       setPage(saved);
       lastSavedAt.current = Date.now();
       toast.success("Page saved");
