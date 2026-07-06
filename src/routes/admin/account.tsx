@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { toast } from "sonner";
-import { KeyRound, Mail, Save } from "lucide-react";
+import { KeyRound, Mail, Phone, Save } from "lucide-react";
 import { AdminShell, PageHeader, Field } from "@/components/admin/AdminShell";
 import { useAdminUser } from "@/lib/useAdminUser";
 import { supabase } from "@/lib/supabase";
