@@ -10,6 +10,7 @@ import {
   LogOut,
   Loader2,
   FileText,
+  UserCog,
 } from "lucide-react";
 import { toast } from "sonner";
 import { useAdminUser, signOutAdmin } from "@/lib/useAdminUser";
@@ -22,6 +23,7 @@ const NAV = [
   { to: "/admin/inquiries", label: "Inquiries", icon: Inbox },
   { to: "/admin/media", label: "Media", icon: ImageIcon },
   { to: "/admin/settings", label: "Settings", icon: SettingsIcon },
+  { to: "/admin/account", label: "Account", icon: UserCog },
 ];
 
 export function AdminShell({ children }: { children: ReactNode }) {
