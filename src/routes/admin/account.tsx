@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { toast } from "sonner";
-import { KeyRound, Mail, Save } from "lucide-react";
+import { KeyRound, Mail, Phone, Save } from "lucide-react";
 import { AdminShell, PageHeader, Field } from "@/components/admin/AdminShell";
 import { useAdminUser } from "@/lib/useAdminUser";
 import { supabase } from "@/lib/supabase";
@@ -16,6 +16,10 @@ function AdminAccount() {
   // Email
   const [newEmail, setNewEmail] = useState("");
   const [emailBusy, setEmailBusy] = useState(false);
+
+  // Phone
+  const [newPhone, setNewPhone] = useState("");
+  const [phoneBusy, setPhoneBusy] = useState(false);
 
   // Password
   const [currentPw, setCurrentPw] = useState("");
@@ -38,6 +42,25 @@ function AdminAccount() {
       toast.error(err?.message || "Failed to update email");
     } finally {
       setEmailBusy(false);
+    }
+  };
+
+  const updatePhone = async () => {
+    const trimmed = newPhone.trim();
+    if (!/^\+?[0-9\s\-()]{7,20}$/.test(trimmed)) {
+      toast.error("Enter a valid phone number (include country code, e.g. +91…)");
+      return;
+    }
+    setPhoneBusy(true);
+    try {
+      const { error } = await supabase.auth.updateUser({ phone: trimmed });
+      if (error) throw error;
+      toast.success("Phone number updated");
+      setNewPhone("");
+    } catch (err: any) {
+      toast.error(err?.message || "Failed to update phone");
+    } finally {
+      setPhoneBusy(false);
     }
   };
 
@@ -118,6 +141,44 @@ function AdminAccount() {
             {emailBusy ? "Sending…" : "Send confirmation"}
           </button>
         </section>
+
+        {/* Change phone */}
+        <section className="rounded-3xl bg-card/60 border border-border/60 p-6 md:p-8 space-y-5">
+          <div className="flex items-center gap-3">
+            <div className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-accent/15 text-accent">
+              <Phone className="h-4 w-4" strokeWidth={1.4} />
+            </div>
+            <div>
+              <h2 className="text-lg tracking-[-0.02em]">Change phone</h2>
+              <p className="text-xs text-muted-foreground mt-0.5">
+                Current: <span className="text-foreground">{(user as any)?.phone || "—"}</span>
+              </p>
+            </div>
+          </div>
+
+          <Field
+            label="New phone (with country code)"
+            value={newPhone}
+            onChange={setNewPhone}
+            type="tel"
+            placeholder="+91 98xxxxxxxx"
+            testId="account-new-phone"
+          />
+          <p className="text-[11px] text-muted-foreground">
+            Include country code. If SMS OTP is enabled in Cloud, you'll be
+            asked to verify the new number.
+          </p>
+          <button
+            onClick={updatePhone}
+            disabled={phoneBusy || !newPhone}
+            data-testid="account-phone-save"
+            className="inline-flex items-center gap-2 rounded-full bg-primary text-primary-foreground px-5 py-2.5 text-sm hover:scale-[1.02] disabled:opacity-60 transition-transform"
+          >
+            <Save className="h-3.5 w-3.5" />
+            {phoneBusy ? "Updating…" : "Update phone"}
+          </button>
+        </section>
+
 
         {/* Change password */}
         <section className="rounded-3xl bg-card/60 border border-border/60 p-6 md:p-8 space-y-5">
