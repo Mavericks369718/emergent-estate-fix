@@ -45,6 +45,25 @@ function AdminAccount() {
     }
   };
 
+  const updatePhone = async () => {
+    const trimmed = newPhone.trim();
+    if (!/^\+?[0-9\s\-()]{7,20}$/.test(trimmed)) {
+      toast.error("Enter a valid phone number (include country code, e.g. +91…)");
+      return;
+    }
+    setPhoneBusy(true);
+    try {
+      const { error } = await supabase.auth.updateUser({ phone: trimmed });
+      if (error) throw error;
+      toast.success("Phone number updated");
+      setNewPhone("");
+    } catch (err: any) {
+      toast.error(err?.message || "Failed to update phone");
+    } finally {
+      setPhoneBusy(false);
+    }
+  };
+
   const updatePassword = async () => {
     if (newPw.length < 8) {
       toast.error("Password must be at least 8 characters");
