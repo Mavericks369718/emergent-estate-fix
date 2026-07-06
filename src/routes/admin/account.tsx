@@ -17,6 +17,10 @@ function AdminAccount() {
   const [newEmail, setNewEmail] = useState("");
   const [emailBusy, setEmailBusy] = useState(false);
 
+  // Phone
+  const [newPhone, setNewPhone] = useState("");
+  const [phoneBusy, setPhoneBusy] = useState(false);
+
   // Password
   const [currentPw, setCurrentPw] = useState("");
   const [newPw, setNewPw] = useState("");
