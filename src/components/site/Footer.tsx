@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { Instagram, Linkedin, Twitter, Youtube, ArrowRight } from "lucide-react";
+import { Instagram, Linkedin, Twitter, Youtube, Facebook, MessageCircle, ArrowRight } from "lucide-react";
 import { Link } from "@tanstack/react-router";
 import { toast } from "sonner";
 import { useState } from "react";
