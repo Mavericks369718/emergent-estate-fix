@@ -125,6 +125,16 @@ export interface MediaDTO {
   created_at: string;
 }
 
+export interface SiteContactDTO {
+  phone: string;
+  email: string;
+  address: string;
+  instagram_url: string;
+  linkedin_url: string;
+  twitter_url: string;
+  youtube_url: string;
+}
+
 // -------------------- Error class (kept for back-compat) --------------------
 class ApiError extends Error {
   status: number;
