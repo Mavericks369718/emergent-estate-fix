@@ -418,6 +418,54 @@ export const api = {
     };
   },
 
+  // -------------------- Site contact (single-row settings) --------------------
+  getSiteContact: async (): Promise<SiteContactDTO> => {
+    const { data, error } = await supabase
+      .from("site_contact")
+      .select("*")
+      .eq("id", 1)
+      .maybeSingle();
+    if (error && (error as any).code !== "PGRST116") {
+      // Table may not exist yet — fall back to empty so UI still renders.
+      return {
+        phone: "",
+        email: "",
+        address: "",
+        instagram_url: "",
+        linkedin_url: "",
+        twitter_url: "",
+        youtube_url: "",
+      };
+    }
+    return {
+      phone: data?.phone ?? "",
+      email: data?.email ?? "",
+      address: data?.address ?? "",
+      instagram_url: data?.instagram_url ?? "",
+      linkedin_url: data?.linkedin_url ?? "",
+      twitter_url: data?.twitter_url ?? "",
+      youtube_url: data?.youtube_url ?? "",
+    };
+  },
+
+  updateSiteContact: async (body: SiteContactDTO): Promise<SiteContactDTO> => {
+    const { data, error } = await supabase
+      .from("site_contact")
+      .upsert({ id: 1, ...body }, { onConflict: "id" })
+      .select("*")
+      .single();
+    if (error) bail(error);
+    return {
+      phone: data.phone ?? "",
+      email: data.email ?? "",
+      address: data.address ?? "",
+      instagram_url: data.instagram_url ?? "",
+      linkedin_url: data.linkedin_url ?? "",
+      twitter_url: data.twitter_url ?? "",
+      youtube_url: data.youtube_url ?? "",
+    };
+  },
+
   // -------------------- Inquiries --------------------
   createInquiry: async (body: {
     name: string;
