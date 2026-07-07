@@ -80,14 +80,22 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Lovable App" },
-      { name: "description", content: "Lovable Generated Project" },
-      { name: "author", content: "Lovable" },
-      { property: "og:title", content: "Lovable App" },
-      { property: "og:description", content: "Lovable Generated Project" },
+      { title: "South Delhi Farms & Floors" },
+      {
+        name: "description",
+        content:
+          "Curating extraordinary farmhouses, builder floors, and penthouses in South Delhi for a life of prestige and discretion.",
+      },
+      { name: "author", content: "South Delhi Farms & Floors" },
+      { property: "og:title", content: "South Delhi Farms & Floors" },
+      {
+        property: "og:description",
+        content:
+          "Curating extraordinary farmhouses, builder floors, and penthouses in South Delhi for a life of prestige and discretion.",
+      },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
-      { name: "twitter:site", content: "@Lovable" },
+      { name: "twitter:site", content: "@SouthDelhiFNF" },
     ],
     links: [
       { rel: "stylesheet", href: appCss },
