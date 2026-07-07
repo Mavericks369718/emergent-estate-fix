@@ -469,6 +469,8 @@ export const api = {
       linkedin_url: data.linkedin_url ?? "",
       twitter_url: data.twitter_url ?? "",
       youtube_url: data.youtube_url ?? "",
+      whatsapp_url: (data as any).whatsapp_url ?? "",
+      facebook_url: (data as any).facebook_url ?? "",
     };
   },
 
