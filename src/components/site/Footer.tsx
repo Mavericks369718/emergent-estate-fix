@@ -28,6 +28,8 @@ export function Footer() {
   const contact = useSiteContact();
   const socials = [
     { Icon: Instagram, href: contact.instagram_url, label: "Instagram" },
+    { Icon: MessageCircle, href: contact.whatsapp_url, label: "WhatsApp" },
+    { Icon: Facebook, href: contact.facebook_url, label: "Facebook" },
     { Icon: Linkedin, href: contact.linkedin_url, label: "LinkedIn" },
     { Icon: Twitter, href: contact.twitter_url, label: "X" },
     { Icon: Youtube, href: contact.youtube_url, label: "YouTube" },
