@@ -14,7 +14,48 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      site_contact: {
+        Row: {
+          address: string
+          email: string
+          facebook_url: string
+          id: number
+          instagram_url: string
+          linkedin_url: string
+          phone: string
+          twitter_url: string
+          updated_at: string
+          whatsapp_url: string
+          youtube_url: string
+        }
+        Insert: {
+          address?: string
+          email?: string
+          facebook_url?: string
+          id: number
+          instagram_url?: string
+          linkedin_url?: string
+          phone?: string
+          twitter_url?: string
+          updated_at?: string
+          whatsapp_url?: string
+          youtube_url?: string
+        }
+        Update: {
+          address?: string
+          email?: string
+          facebook_url?: string
+          id?: number
+          instagram_url?: string
+          linkedin_url?: string
+          phone?: string
+          twitter_url?: string
+          updated_at?: string
+          whatsapp_url?: string
+          youtube_url?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
