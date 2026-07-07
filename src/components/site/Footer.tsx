@@ -25,6 +25,13 @@ const OFFICE: { label: string; to: string }[] = [
 
 export function Footer() {
   const [email, setEmail] = useState("");
+  const contact = useSiteContact();
+  const socials = [
+    { Icon: Instagram, href: contact.instagram_url, label: "Instagram" },
+    { Icon: Linkedin, href: contact.linkedin_url, label: "LinkedIn" },
+    { Icon: Twitter, href: contact.twitter_url, label: "X" },
+    { Icon: Youtube, href: contact.youtube_url, label: "YouTube" },
+  ].filter((s) => s.href && s.href.trim() !== "");
   return (
     <footer className="relative px-4 md:px-6 pb-6" data-testid="site-footer">
       <div className="grid md:grid-cols-2 gap-4 md:gap-5">
