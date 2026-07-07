@@ -4,9 +4,12 @@ import { toast } from "sonner";
 import { fadeUp } from "@/lib/motion";
 import { Phone, Mail, MapPin, ArrowRight } from "lucide-react";
 import { api } from "@/lib/api";
+import { useSiteContact } from "@/lib/useSiteContact";
 import bg from "@/assets/contact-night.jpg";
 
 export function ContactSection() {
+  const contact = useSiteContact();
+  const telHref = contact.phone ? `tel:${contact.phone.replace(/[^\d+]/g, "")}` : "#";
   const [sent, setSent] = useState(false);
   const [busy, setBusy] = useState(false);
   const [form, setForm] = useState({
@@ -86,15 +89,21 @@ export function ContactSection() {
           </div>
 
           <div className="relative mt-12 space-y-5 text-sm text-secondary-foreground">
-            <a href="tel:+911100000000" className="flex items-center gap-3 hover:text-foreground transition-colors">
-              <Phone className="h-4 w-4 text-accent" strokeWidth={1.4} /> +91 11 0000 0000
-            </a>
-            <a href="mailto:private@southdelhi.estate" className="flex items-center gap-3 hover:text-foreground transition-colors">
-              <Mail className="h-4 w-4 text-accent" strokeWidth={1.4} /> private@southdelhi.estate
-            </a>
-            <p className="flex items-center gap-3">
-              <MapPin className="h-4 w-4 text-accent" strokeWidth={1.4} /> Aurangzeb Road, New Delhi
-            </p>
+            {contact.phone && (
+              <a href={telHref} className="flex items-center gap-3 hover:text-foreground transition-colors">
+                <Phone className="h-4 w-4 text-accent" strokeWidth={1.4} /> {contact.phone}
+              </a>
+            )}
+            {contact.email && (
+              <a href={`mailto:${contact.email}`} className="flex items-center gap-3 hover:text-foreground transition-colors">
+                <Mail className="h-4 w-4 text-accent" strokeWidth={1.4} /> {contact.email}
+              </a>
+            )}
+            {contact.address && (
+              <p className="flex items-center gap-3">
+                <MapPin className="h-4 w-4 text-accent" strokeWidth={1.4} /> {contact.address}
+              </p>
+            )}
           </div>
         </motion.div>
 

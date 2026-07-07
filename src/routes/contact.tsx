@@ -7,6 +7,7 @@ import { Navbar } from "@/components/site/Navbar";
 import { Footer } from "@/components/site/Footer";
 import { fadeUp } from "@/lib/motion";
 import { api } from "@/lib/api";
+import { useSiteContact } from "@/lib/useSiteContact";
 import bg from "@/assets/contact-night.jpg";
 
 export const Route = createFileRoute("/contact")({
@@ -24,9 +25,12 @@ export const Route = createFileRoute("/contact")({
 });
 
 function ContactPage() {
+  const contact = useSiteContact();
+  const telHref = contact.phone ? `tel:${contact.phone.replace(/[^\d+]/g, "")}` : "#";
   return (
     <main className="bg-background text-foreground" data-testid="contact-page">
       <Navbar />
+
 
       <section className="relative pt-40 md:pt-56 pb-16 px-6 md:px-12">
         <div className="max-w-[1400px] mx-auto">
@@ -74,23 +78,29 @@ function ContactPage() {
             </div>
 
             <div className="relative mt-12 space-y-5 text-sm text-secondary-foreground">
-              <a
-                href="tel:+911100000000"
-                className="flex items-center gap-3 hover:text-foreground transition-colors"
-                data-testid="contact-info-phone"
-              >
-                <Phone className="h-4 w-4 text-accent" strokeWidth={1.4} /> +91 11 0000 0000
-              </a>
-              <a
-                href="mailto:private@southdelhi.estate"
-                className="flex items-center gap-3 hover:text-foreground transition-colors"
-                data-testid="contact-info-email"
-              >
-                <Mail className="h-4 w-4 text-accent" strokeWidth={1.4} /> private@southdelhi.estate
-              </a>
-              <p className="flex items-center gap-3" data-testid="contact-address">
-                <MapPin className="h-4 w-4 text-accent" strokeWidth={1.4} /> Aurangzeb Road, New Delhi
-              </p>
+              {contact.phone && (
+                <a
+                  href={telHref}
+                  className="flex items-center gap-3 hover:text-foreground transition-colors"
+                  data-testid="contact-info-phone"
+                >
+                  <Phone className="h-4 w-4 text-accent" strokeWidth={1.4} /> {contact.phone}
+                </a>
+              )}
+              {contact.email && (
+                <a
+                  href={`mailto:${contact.email}`}
+                  className="flex items-center gap-3 hover:text-foreground transition-colors"
+                  data-testid="contact-info-email"
+                >
+                  <Mail className="h-4 w-4 text-accent" strokeWidth={1.4} /> {contact.email}
+                </a>
+              )}
+              {contact.address && (
+                <p className="flex items-center gap-3" data-testid="contact-address">
+                  <MapPin className="h-4 w-4 text-accent" strokeWidth={1.4} /> {contact.address}
+                </p>
+              )}
             </div>
           </motion.div>
 

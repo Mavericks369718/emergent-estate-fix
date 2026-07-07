@@ -5,14 +5,8 @@ import { toast } from "sonner";
 import { useState } from "react";
 import { Logo } from "./Logo";
 import { api } from "@/lib/api";
+import { useSiteContact } from "@/lib/useSiteContact";
 import bg from "@/assets/footer-mansion.jpg";
-
-const SOCIALS = [
-  { Icon: Instagram, href: "#", label: "Instagram" },
-  { Icon: Linkedin, href: "#", label: "LinkedIn" },
-  { Icon: Twitter, href: "#", label: "X" },
-  { Icon: Youtube, href: "#", label: "YouTube" },
-];
 
 const EXPLORE: { label: string; to: string }[] = [
   { label: "Home", to: "/" },
@@ -31,6 +25,13 @@ const OFFICE: { label: string; to: string }[] = [
 
 export function Footer() {
   const [email, setEmail] = useState("");
+  const contact = useSiteContact();
+  const socials = [
+    { Icon: Instagram, href: contact.instagram_url, label: "Instagram" },
+    { Icon: Linkedin, href: contact.linkedin_url, label: "LinkedIn" },
+    { Icon: Twitter, href: contact.twitter_url, label: "X" },
+    { Icon: Youtube, href: contact.youtube_url, label: "YouTube" },
+  ].filter((s) => s.href && s.href.trim() !== "");
   return (
     <footer className="relative px-4 md:px-6 pb-6" data-testid="site-footer">
       <div className="grid md:grid-cols-2 gap-4 md:gap-5">
@@ -55,10 +56,12 @@ export function Footer() {
               Curating extraordinary addresses for a life of prestige.
             </p>
             <div className="mt-8 flex items-center gap-3">
-              {SOCIALS.map(({ Icon, href, label }) => (
+              {socials.map(({ Icon, href, label }) => (
                 <a
                   key={label}
                   href={href}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   aria-label={label}
                   className="liquid-glass h-11 w-11 rounded-full inline-flex items-center justify-center text-foreground hover:-translate-y-0.5 transition-transform duration-500"
                 >
