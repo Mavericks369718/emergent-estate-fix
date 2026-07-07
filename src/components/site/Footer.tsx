@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { Instagram, Linkedin, Twitter, Youtube, ArrowRight } from "lucide-react";
+import { Instagram, Linkedin, Twitter, Youtube, Facebook, MessageCircle, ArrowRight } from "lucide-react";
 import { Link } from "@tanstack/react-router";
 import { toast } from "sonner";
 import { useState } from "react";
@@ -28,6 +28,8 @@ export function Footer() {
   const contact = useSiteContact();
   const socials = [
     { Icon: Instagram, href: contact.instagram_url, label: "Instagram" },
+    { Icon: MessageCircle, href: contact.whatsapp_url, label: "WhatsApp" },
+    { Icon: Facebook, href: contact.facebook_url, label: "Facebook" },
     { Icon: Linkedin, href: contact.linkedin_url, label: "LinkedIn" },
     { Icon: Twitter, href: contact.twitter_url, label: "X" },
     { Icon: Youtube, href: contact.youtube_url, label: "YouTube" },
