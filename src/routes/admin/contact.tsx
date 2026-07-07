@@ -90,9 +90,12 @@ function AdminContact() {
             </p>
             <div className="grid sm:grid-cols-2 gap-4">
               <Field label="Instagram URL" value={form.instagram_url} onChange={(v) => set("instagram_url", v)} testId="sc-instagram" placeholder="https://instagram.com/..." />
+              <Field label="WhatsApp URL" value={form.whatsapp_url} onChange={(v) => set("whatsapp_url", v)} testId="sc-whatsapp" placeholder="https://wa.me/91XXXXXXXXXX" />
+              <Field label="Facebook URL" value={form.facebook_url} onChange={(v) => set("facebook_url", v)} testId="sc-facebook" placeholder="https://facebook.com/..." />
               <Field label="LinkedIn URL" value={form.linkedin_url} onChange={(v) => set("linkedin_url", v)} testId="sc-linkedin" placeholder="https://linkedin.com/..." />
               <Field label="X / Twitter URL" value={form.twitter_url} onChange={(v) => set("twitter_url", v)} testId="sc-twitter" placeholder="https://x.com/..." />
               <Field label="YouTube URL" value={form.youtube_url} onChange={(v) => set("youtube_url", v)} testId="sc-youtube" placeholder="https://youtube.com/..." />
+
             </div>
           </div>
 
