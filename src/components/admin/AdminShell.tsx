@@ -11,6 +11,7 @@ import {
   Loader2,
   FileText,
   UserCog,
+  Phone,
 } from "lucide-react";
 import { toast } from "sonner";
 import { useAdminUser, signOutAdmin } from "@/lib/useAdminUser";
@@ -22,6 +23,7 @@ const NAV = [
   { to: "/admin/pages", label: "Pages", icon: FileText },
   { to: "/admin/inquiries", label: "Inquiries", icon: Inbox },
   { to: "/admin/media", label: "Media", icon: ImageIcon },
+  { to: "/admin/contact", label: "Contact", icon: Phone },
   { to: "/admin/settings", label: "Settings", icon: SettingsIcon },
   { to: "/admin/account", label: "Account", icon: UserCog },
 ];
