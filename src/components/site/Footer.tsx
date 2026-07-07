@@ -56,10 +56,12 @@ export function Footer() {
               Curating extraordinary addresses for a life of prestige.
             </p>
             <div className="mt-8 flex items-center gap-3">
-              {SOCIALS.map(({ Icon, href, label }) => (
+              {socials.map(({ Icon, href, label }) => (
                 <a
                   key={label}
                   href={href}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   aria-label={label}
                   className="liquid-glass h-11 w-11 rounded-full inline-flex items-center justify-center text-foreground hover:-translate-y-0.5 transition-transform duration-500"
                 >
