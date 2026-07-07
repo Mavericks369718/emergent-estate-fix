@@ -27,8 +27,10 @@ export const Route = createFileRoute("/contact")({
 function ContactPage() {
   const contact = useSiteContact();
   const telHref = contact.phone ? `tel:${contact.phone.replace(/[^\d+]/g, "")}` : "#";
+  return (
     <main className="bg-background text-foreground" data-testid="contact-page">
       <Navbar />
+
 
       <section className="relative pt-40 md:pt-56 pb-16 px-6 md:px-12">
         <div className="max-w-[1400px] mx-auto">
