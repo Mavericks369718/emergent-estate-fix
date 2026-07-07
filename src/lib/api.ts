@@ -133,6 +133,8 @@ export interface SiteContactDTO {
   linkedin_url: string;
   twitter_url: string;
   youtube_url: string;
+  whatsapp_url: string;
+  facebook_url: string;
 }
 
 // -------------------- Error class (kept for back-compat) --------------------
