@@ -12,6 +12,8 @@ export const DEFAULT_CONTACT: SiteContactDTO = {
   linkedin_url: "",
   twitter_url: "",
   youtube_url: "",
+  whatsapp_url: "",
+  facebook_url: "",
 };
 
 let cache: SiteContactDTO | null = null;
