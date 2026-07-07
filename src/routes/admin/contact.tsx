@@ -18,6 +18,8 @@ const EMPTY: SiteContactDTO = {
   linkedin_url: "",
   twitter_url: "",
   youtube_url: "",
+  whatsapp_url: "",
+  facebook_url: "",
 };
 
 function AdminContact() {
