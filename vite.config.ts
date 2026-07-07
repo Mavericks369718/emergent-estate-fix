@@ -12,6 +12,8 @@ export default defineConfig({
   tanstackStart: {
     server: { entry: "server" },
   },
+  // Vercel deployment preset — replaces the default Cloudflare Workers output.
+  nitro: { preset: "vercel" },
   vite: {
     envPrefix: ["VITE_", "REACT_APP_"],
     server: {
