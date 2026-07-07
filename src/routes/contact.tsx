@@ -7,6 +7,7 @@ import { Navbar } from "@/components/site/Navbar";
 import { Footer } from "@/components/site/Footer";
 import { fadeUp } from "@/lib/motion";
 import { api } from "@/lib/api";
+import { useSiteContact } from "@/lib/useSiteContact";
 import bg from "@/assets/contact-night.jpg";
 
 export const Route = createFileRoute("/contact")({
@@ -24,7 +25,8 @@ export const Route = createFileRoute("/contact")({
 });
 
 function ContactPage() {
-  return (
+  const contact = useSiteContact();
+  const telHref = contact.phone ? `tel:${contact.phone.replace(/[^\d+]/g, "")}` : "#";
     <main className="bg-background text-foreground" data-testid="contact-page">
       <Navbar />
 
