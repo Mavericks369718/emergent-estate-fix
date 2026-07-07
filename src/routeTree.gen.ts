@@ -25,6 +25,7 @@ import { Route as AdminPagesRouteImport } from './routes/admin/pages'
 import { Route as AdminMediaRouteImport } from './routes/admin/media'
 import { Route as AdminLoginRouteImport } from './routes/admin/login'
 import { Route as AdminInquiriesRouteImport } from './routes/admin/inquiries'
+import { Route as AdminContactRouteImport } from './routes/admin/contact'
 import { Route as AdminBlogsRouteImport } from './routes/admin/blogs'
 import { Route as AdminAccountRouteImport } from './routes/admin/account'
 import { Route as AdminPagesSlugRouteImport } from './routes/admin/pages/$slug'
@@ -109,6 +110,11 @@ const AdminInquiriesRoute = AdminInquiriesRouteImport.update({
   path: '/inquiries',
   getParentRoute: () => AdminRoute,
 } as any)
+const AdminContactRoute = AdminContactRouteImport.update({
+  id: '/contact',
+  path: '/contact',
+  getParentRoute: () => AdminRoute,
+} as any)
 const AdminBlogsRoute = AdminBlogsRouteImport.update({
   id: '/blogs',
   path: '/blogs',
@@ -132,6 +138,7 @@ export interface FileRoutesByFullPath {
   '/contact': typeof ContactRoute
   '/admin/account': typeof AdminAccountRoute
   '/admin/blogs': typeof AdminBlogsRoute
+  '/admin/contact': typeof AdminContactRoute
   '/admin/inquiries': typeof AdminInquiriesRoute
   '/admin/login': typeof AdminLoginRoute
   '/admin/media': typeof AdminMediaRoute
@@ -152,6 +159,7 @@ export interface FileRoutesByTo {
   '/contact': typeof ContactRoute
   '/admin/account': typeof AdminAccountRoute
   '/admin/blogs': typeof AdminBlogsRoute
+  '/admin/contact': typeof AdminContactRoute
   '/admin/inquiries': typeof AdminInquiriesRoute
   '/admin/login': typeof AdminLoginRoute
   '/admin/media': typeof AdminMediaRoute
@@ -174,6 +182,7 @@ export interface FileRoutesById {
   '/contact': typeof ContactRoute
   '/admin/account': typeof AdminAccountRoute
   '/admin/blogs': typeof AdminBlogsRoute
+  '/admin/contact': typeof AdminContactRoute
   '/admin/inquiries': typeof AdminInquiriesRoute
   '/admin/login': typeof AdminLoginRoute
   '/admin/media': typeof AdminMediaRoute
@@ -197,6 +206,7 @@ export interface FileRouteTypes {
     | '/contact'
     | '/admin/account'
     | '/admin/blogs'
+    | '/admin/contact'
     | '/admin/inquiries'
     | '/admin/login'
     | '/admin/media'
@@ -217,6 +227,7 @@ export interface FileRouteTypes {
     | '/contact'
     | '/admin/account'
     | '/admin/blogs'
+    | '/admin/contact'
     | '/admin/inquiries'
     | '/admin/login'
     | '/admin/media'
@@ -238,6 +249,7 @@ export interface FileRouteTypes {
     | '/contact'
     | '/admin/account'
     | '/admin/blogs'
+    | '/admin/contact'
     | '/admin/inquiries'
     | '/admin/login'
     | '/admin/media'
@@ -379,6 +391,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminInquiriesRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/admin/contact': {
+      id: '/admin/contact'
+      path: '/contact'
+      fullPath: '/admin/contact'
+      preLoaderRoute: typeof AdminContactRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/admin/blogs': {
       id: '/admin/blogs'
       path: '/blogs'
@@ -418,6 +437,7 @@ const AdminPagesRouteWithChildren = AdminPagesRoute._addFileChildren(
 interface AdminRouteChildren {
   AdminAccountRoute: typeof AdminAccountRoute
   AdminBlogsRoute: typeof AdminBlogsRoute
+  AdminContactRoute: typeof AdminContactRoute
   AdminInquiriesRoute: typeof AdminInquiriesRoute
   AdminLoginRoute: typeof AdminLoginRoute
   AdminMediaRoute: typeof AdminMediaRoute
@@ -430,6 +450,7 @@ interface AdminRouteChildren {
 const AdminRouteChildren: AdminRouteChildren = {
   AdminAccountRoute: AdminAccountRoute,
   AdminBlogsRoute: AdminBlogsRoute,
+  AdminContactRoute: AdminContactRoute,
   AdminInquiriesRoute: AdminInquiriesRoute,
   AdminLoginRoute: AdminLoginRoute,
   AdminMediaRoute: AdminMediaRoute,

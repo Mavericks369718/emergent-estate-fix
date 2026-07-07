@@ -5,14 +5,8 @@ import { toast } from "sonner";
 import { useState } from "react";
 import { Logo } from "./Logo";
 import { api } from "@/lib/api";
+import { useSiteContact } from "@/lib/useSiteContact";
 import bg from "@/assets/footer-mansion.jpg";
-
-const SOCIALS = [
-  { Icon: Instagram, href: "#", label: "Instagram" },
-  { Icon: Linkedin, href: "#", label: "LinkedIn" },
-  { Icon: Twitter, href: "#", label: "X" },
-  { Icon: Youtube, href: "#", label: "YouTube" },
-];
 
 const EXPLORE: { label: string; to: string }[] = [
   { label: "Home", to: "/" },
