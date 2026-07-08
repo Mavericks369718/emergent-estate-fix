@@ -14,6 +14,54 @@ export type Database = {
   }
   public: {
     Tables: {
+      pages: {
+        Row: {
+          content: string
+          cover: string
+          created_at: string
+          hero: Json
+          id: string
+          nav_order: number
+          sections: Json
+          seo: Json
+          show_in_nav: boolean
+          slug: string
+          status: string
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          content?: string
+          cover?: string
+          created_at?: string
+          hero?: Json
+          id?: string
+          nav_order?: number
+          sections?: Json
+          seo?: Json
+          show_in_nav?: boolean
+          slug: string
+          status?: string
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          content?: string
+          cover?: string
+          created_at?: string
+          hero?: Json
+          id?: string
+          nav_order?: number
+          sections?: Json
+          seo?: Json
+          show_in_nav?: boolean
+          slug?: string
+          status?: string
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       site_contact: {
         Row: {
           address: string

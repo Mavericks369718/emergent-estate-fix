@@ -47,7 +47,12 @@ function DynamicPage() {
   const heroSubtitle = page.hero?.subtitle?.trim() ?? "";
   const gallery = findSection(page.sections, "gallery");
   const cta = findSection(page.sections, "cta");
+  const video = findSection(page.sections, "video");
   const isExternal = (u: string) => /^https?:\/\//i.test(u);
+  const youtubeId = (u: string) => {
+    const m = u.match(/(?:youtu\.be\/|v=|embed\/|shorts\/)([A-Za-z0-9_-]{11})/);
+    return m ? m[1] : null;
+  };
 
   return (
     <main className="bg-background text-foreground" data-testid="dynamic-page">
@@ -106,6 +111,32 @@ function DynamicPage() {
           <p className="text-muted-foreground">This page is empty. Add content in the admin panel.</p>
         </section>
       )}
+
+      {/* Optional video block */}
+      {video && youtubeId(video.url) && (
+        <section className="relative px-6 md:px-12 pb-16 md:pb-24" data-testid="page-video">
+          <div className="max-w-[1100px] mx-auto">
+            {video.title && (
+              <h2 className="text-3xl md:text-4xl font-light tracking-[-0.02em] mb-8 italic-serif text-center">
+                {video.title}
+              </h2>
+            )}
+            <div className="relative rounded-2xl md:rounded-3xl overflow-hidden aspect-video bg-black">
+              <iframe
+                src={`https://www.youtube.com/embed/${youtubeId(video.url)}`}
+                title={video.title || heroTitle}
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                allowFullScreen
+                className="absolute inset-0 h-full w-full border-0"
+              />
+            </div>
+            {video.caption && (
+              <p className="mt-4 text-center text-sm text-muted-foreground">{video.caption}</p>
+            )}
+          </div>
+        </section>
+      )}
+
 
       {/* Optional gallery block */}
       {gallery && gallery.images?.length > 0 && (
