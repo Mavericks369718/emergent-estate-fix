@@ -380,9 +380,8 @@ function AdminPageEdit() {
             <div className="sm:col-span-2">
               <Field label="Supporting text" value={cta.body ?? ""} onChange={(x) => updateCta({ body: x })} textarea testId="page-cta-body" placeholder="One short sentence under the heading" />
             </div>
-            <div className="sm:col-span-2">
-              <Field label="Button URL" value={cta.ctaUrl} onChange={(x) => updateCta({ ctaUrl: x })} testId="page-cta-url" placeholder="/contact" />
-            </div>
+            <Field label="Button URL" value={cta.ctaUrl} onChange={(x) => updateCta({ ctaUrl: x })} testId="page-cta-url" placeholder="/contact" />
+            <PositionSelect value={cta.position ?? "below"} onChange={(p) => updateCta({ position: p })} testId="page-cta-position" />
           </div>
         )}
       </section>
