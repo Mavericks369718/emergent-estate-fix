@@ -47,7 +47,12 @@ function DynamicPage() {
   const heroSubtitle = page.hero?.subtitle?.trim() ?? "";
   const gallery = findSection(page.sections, "gallery");
   const cta = findSection(page.sections, "cta");
+  const video = findSection(page.sections, "video");
   const isExternal = (u: string) => /^https?:\/\//i.test(u);
+  const youtubeId = (u: string) => {
+    const m = u.match(/(?:youtu\.be\/|v=|embed\/|shorts\/)([A-Za-z0-9_-]{11})/);
+    return m ? m[1] : null;
+  };
 
   return (
     <main className="bg-background text-foreground" data-testid="dynamic-page">
