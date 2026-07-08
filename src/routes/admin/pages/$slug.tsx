@@ -26,9 +26,11 @@ export const Route = createFileRoute("/admin/pages/$slug")({
 // Stable IDs so we can find-and-replace the optional gallery/cta blocks.
 const GALLERY_ID = "page-gallery";
 const CTA_ID = "page-cta";
+const VIDEO_ID = "page-video";
 
 type GallerySection = Extract<PageSection, { type: "gallery" }>;
 type CtaSection = Extract<PageSection, { type: "cta" }>;
+type VideoSection = Extract<PageSection, { type: "video" }>;
 
 function findSection<T extends PageSection["type"]>(
   sections: PageSection[],
@@ -68,6 +70,7 @@ function AdminPageEdit() {
 
   const gallery = findSection(page.sections, "gallery") as GallerySection | undefined;
   const cta = findSection(page.sections, "cta") as CtaSection | undefined;
+  const video = findSection(page.sections, "video") as VideoSection | undefined;
 
   const save = async () => {
     setBusy(true);
@@ -174,6 +177,21 @@ function AdminPageEdit() {
   const removeCtaBlock = () => {
     set({ sections: removeSection(page.sections, CTA_ID) });
   };
+
+  const addVideo = () => {
+    if (video) return;
+    set({ sections: upsertSection(page.sections, {
+      id: VIDEO_ID, type: "video", title: "Watch the feature", url: "", caption: "",
+    })});
+  };
+  const updateVideo = (patch: Partial<VideoSection>) => {
+    if (!video) return;
+    set({ sections: upsertSection(page.sections, { ...video, ...patch }) });
+  };
+  const removeVideoBlock = () => {
+    set({ sections: removeSection(page.sections, VIDEO_ID) });
+  };
+
 
   return (
     <AdminShell>
@@ -365,6 +383,38 @@ function AdminPageEdit() {
           </div>
         )}
       </section>
+
+      {/* Optional Video block */}
+      <section className="rounded-3xl bg-card/60 border border-border/60 p-6 md:p-8 mb-6" data-testid="page-video-block">
+        <div className="flex items-center justify-between mb-4">
+          <div>
+            <p className="text-[11px] uppercase tracking-[3px] text-accent">Video block (optional)</p>
+            <p className="text-xs text-muted-foreground mt-1">Embeds a YouTube video below the main content. Paste any YouTube URL (youtu.be, watch?v=, embed, or shorts).</p>
+          </div>
+          {video ? (
+            <button onClick={removeVideoBlock} data-testid="page-video-remove"
+              className="inline-flex items-center gap-1.5 rounded-full liquid-glass px-3 py-1.5 text-xs text-destructive">
+              <Trash2 className="h-3 w-3" /> Remove video
+            </button>
+          ) : (
+            <button onClick={addVideo} data-testid="page-video-add"
+              className="inline-flex items-center gap-1.5 rounded-full liquid-glass px-3 py-1.5 text-xs">
+              <Plus className="h-3 w-3" /> Add video
+            </button>
+          )}
+        </div>
+        {video && (
+          <div className="grid sm:grid-cols-2 gap-4">
+            <Field label="Heading (optional)" value={video.title ?? ""} onChange={(x) => updateVideo({ title: x })} testId="page-video-title" placeholder="Watch the feature" />
+            <Field label="Caption (optional)" value={video.caption ?? ""} onChange={(x) => updateVideo({ caption: x })} testId="page-video-caption" placeholder="Shown under the video" />
+            <div className="sm:col-span-2">
+              <Field label="YouTube URL" value={video.url} onChange={(x) => updateVideo({ url: x })} testId="page-video-url" placeholder="https://youtu.be/…" />
+            </div>
+          </div>
+        )}
+      </section>
+
+
 
       {/* SEO */}
       <section className="rounded-3xl bg-card/60 border border-border/60 p-6 md:p-8 space-y-4" data-testid="page-seo">
