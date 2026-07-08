@@ -92,14 +92,15 @@ export interface PageHero {
   image?: string;
 }
 
+export type SectionPosition = "above" | "below";
 export type PageSection =
-  | { id: string; type: "text"; eyebrow?: string; h2?: string; body: { type: "h2" | "p"; text: string }[] }
-  | { id: string; type: "gallery"; eyebrow?: string; title?: string; images: string[] }
-  | { id: string; type: "feature"; eyebrow?: string; title: string; body?: string; image?: string; ctaLabel?: string; ctaUrl?: string; layout?: "left" | "right" }
-  | { id: string; type: "stats"; eyebrow?: string; title?: string; items: { value: string; label: string }[] }
-  | { id: string; type: "cta"; eyebrow?: string; title: string; body?: string; ctaLabel: string; ctaUrl: string }
-  | { id: string; type: "faq"; eyebrow?: string; title?: string; items: { q: string; a: string }[] }
-  | { id: string; type: "video"; eyebrow?: string; title?: string; url: string; caption?: string };
+  | { id: string; type: "text"; eyebrow?: string; h2?: string; body: { type: "h2" | "p"; text: string }[]; position?: SectionPosition }
+  | { id: string; type: "gallery"; eyebrow?: string; title?: string; images: string[]; position?: SectionPosition }
+  | { id: string; type: "feature"; eyebrow?: string; title: string; body?: string; image?: string; ctaLabel?: string; ctaUrl?: string; layout?: "left" | "right"; position?: SectionPosition }
+  | { id: string; type: "stats"; eyebrow?: string; title?: string; items: { value: string; label: string }[]; position?: SectionPosition }
+  | { id: string; type: "cta"; eyebrow?: string; title: string; body?: string; ctaLabel: string; ctaUrl: string; position?: SectionPosition }
+  | { id: string; type: "faq"; eyebrow?: string; title?: string; items: { q: string; a: string }[]; position?: SectionPosition }
+  | { id: string; type: "video"; eyebrow?: string; title?: string; url: string; caption?: string; position?: SectionPosition };
 
 export interface PageDTO {
   id?: string;
