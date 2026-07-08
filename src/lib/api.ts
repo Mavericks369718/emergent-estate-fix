@@ -98,7 +98,8 @@ export type PageSection =
   | { id: string; type: "feature"; eyebrow?: string; title: string; body?: string; image?: string; ctaLabel?: string; ctaUrl?: string; layout?: "left" | "right" }
   | { id: string; type: "stats"; eyebrow?: string; title?: string; items: { value: string; label: string }[] }
   | { id: string; type: "cta"; eyebrow?: string; title: string; body?: string; ctaLabel: string; ctaUrl: string }
-  | { id: string; type: "faq"; eyebrow?: string; title?: string; items: { q: string; a: string }[] };
+  | { id: string; type: "faq"; eyebrow?: string; title?: string; items: { q: string; a: string }[] }
+  | { id: string; type: "video"; eyebrow?: string; title?: string; url: string; caption?: string };
 
 export interface PageDTO {
   id?: string;
