@@ -457,3 +457,30 @@ export function MarkdownView({ source }: { source: string }) {
     </ReactMarkdown>
   );
 }
+
+function PositionSelect({
+  value,
+  onChange,
+  testId,
+}: {
+  value: SectionPosition;
+  onChange: (p: SectionPosition) => void;
+  testId?: string;
+}) {
+  return (
+    <label className="block">
+      <span className="block text-[10px] uppercase tracking-[2.5px] text-muted-foreground mb-2">
+        Placement on page
+      </span>
+      <select
+        value={value}
+        onChange={(e) => onChange(e.target.value as SectionPosition)}
+        data-testid={testId}
+        className="w-full rounded-xl bg-input/40 border border-border outline-none px-3.5 py-2.5 text-sm"
+      >
+        <option value="above">Above the main content</option>
+        <option value="below">Below the main content</option>
+      </select>
+    </label>
+  );
+}
