@@ -384,6 +384,38 @@ function AdminPageEdit() {
         )}
       </section>
 
+      {/* Optional Video block */}
+      <section className="rounded-3xl bg-card/60 border border-border/60 p-6 md:p-8 mb-6" data-testid="page-video-block">
+        <div className="flex items-center justify-between mb-4">
+          <div>
+            <p className="text-[11px] uppercase tracking-[3px] text-accent">Video block (optional)</p>
+            <p className="text-xs text-muted-foreground mt-1">Embeds a YouTube video below the main content. Paste any YouTube URL (youtu.be, watch?v=, embed, or shorts).</p>
+          </div>
+          {video ? (
+            <button onClick={removeVideoBlock} data-testid="page-video-remove"
+              className="inline-flex items-center gap-1.5 rounded-full liquid-glass px-3 py-1.5 text-xs text-destructive">
+              <Trash2 className="h-3 w-3" /> Remove video
+            </button>
+          ) : (
+            <button onClick={addVideo} data-testid="page-video-add"
+              className="inline-flex items-center gap-1.5 rounded-full liquid-glass px-3 py-1.5 text-xs">
+              <Plus className="h-3 w-3" /> Add video
+            </button>
+          )}
+        </div>
+        {video && (
+          <div className="grid sm:grid-cols-2 gap-4">
+            <Field label="Heading (optional)" value={video.title ?? ""} onChange={(x) => updateVideo({ title: x })} testId="page-video-title" placeholder="Watch the feature" />
+            <Field label="Caption (optional)" value={video.caption ?? ""} onChange={(x) => updateVideo({ caption: x })} testId="page-video-caption" placeholder="Shown under the video" />
+            <div className="sm:col-span-2">
+              <Field label="YouTube URL" value={video.url} onChange={(x) => updateVideo({ url: x })} testId="page-video-url" placeholder="https://youtu.be/…" />
+            </div>
+          </div>
+        )}
+      </section>
+
+
+
       {/* SEO */}
       <section className="rounded-3xl bg-card/60 border border-border/60 p-6 md:p-8 space-y-4" data-testid="page-seo">
         <p className="text-[11px] uppercase tracking-[3px] text-accent">SEO (for Google & social sharing)</p>
