@@ -54,6 +54,79 @@ function DynamicPage() {
     return m ? m[1] : null;
   };
 
+  const VideoBlock = video && youtubeId(video.url) ? (
+    <section className="relative px-6 md:px-12 pb-16 md:pb-24" data-testid="page-video">
+      <div className="max-w-[1100px] mx-auto">
+        {video.title && (
+          <h2 className="text-3xl md:text-4xl font-light tracking-[-0.02em] mb-8 italic-serif text-center">
+            {video.title}
+          </h2>
+        )}
+        <div className="relative rounded-2xl md:rounded-3xl overflow-hidden aspect-video bg-black">
+          <iframe
+            src={`https://www.youtube.com/embed/${youtubeId(video.url)}`}
+            title={video.title || heroTitle}
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            allowFullScreen
+            className="absolute inset-0 h-full w-full border-0"
+          />
+        </div>
+        {video.caption && (
+          <p className="mt-4 text-center text-sm text-muted-foreground">{video.caption}</p>
+        )}
+      </div>
+    </section>
+  ) : null;
+
+  const GalleryBlock = gallery && gallery.images?.length > 0 ? (
+    <section className="relative px-6 md:px-12 pb-16 md:pb-24" data-testid="page-gallery">
+      <div className="max-w-[1100px] mx-auto">
+        {gallery.title && (
+          <h2 className="text-3xl md:text-4xl font-light tracking-[-0.02em] mb-8 italic-serif">
+            {gallery.title}
+          </h2>
+        )}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
+          {gallery.images.map((url, i) => (
+            <div key={`${url}-${i}`} className="relative rounded-2xl overflow-hidden aspect-[4/3] bg-card/60">
+              <img
+                src={img(url)}
+                alt={`${gallery.title || heroTitle} image ${i + 1}`}
+                className="h-full w-full object-cover"
+                style={focalStyle(url)}
+                loading="lazy"
+              />
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  ) : null;
+
+  const CtaBlock = cta ? (
+    <section className="relative px-6 md:px-12 pb-24 md:pb-32" data-testid="page-cta">
+      <div className="max-w-[1100px] mx-auto rounded-[1.5rem] md:rounded-[2rem] border border-border/60 bg-card/60 p-8 md:p-14 text-center">
+        <h2 className="text-3xl md:text-5xl font-light tracking-[-0.02em] break-words">{cta.title}</h2>
+        {cta.body && (
+          <p className="mt-4 max-w-2xl mx-auto text-base md:text-lg text-secondary-foreground leading-relaxed">
+            {cta.body}
+          </p>
+        )}
+        <div className="mt-8">
+          <a
+            href={cta.ctaUrl}
+            {...(isExternal(cta.ctaUrl) ? { target: "_blank", rel: "noreferrer" } : {})}
+            className="inline-flex items-center gap-2 rounded-full bg-primary text-primary-foreground px-6 py-3 text-sm hover:scale-[1.02] transition-transform"
+          >
+            {cta.ctaLabel} <ArrowRight className="h-4 w-4" />
+          </a>
+        </div>
+      </div>
+    </section>
+  ) : null;
+
+  const isAbove = (s?: { position?: "above" | "below" }) => s?.position === "above";
+
   return (
     <main className="bg-background text-foreground" data-testid="dynamic-page">
       <Navbar />
@@ -96,6 +169,11 @@ function DynamicPage() {
         </div>
       </section>
 
+      {/* Blocks positioned above the main content */}
+      {isAbove(video) && VideoBlock}
+      {isAbove(gallery) && GalleryBlock}
+      {isAbove(cta) && CtaBlock}
+
       {/* Content (Markdown) */}
       {page.content?.trim() ? (
         <section className="relative px-6 md:px-12 pb-16 md:pb-24" data-testid="page-content">
@@ -112,80 +190,10 @@ function DynamicPage() {
         </section>
       )}
 
-      {/* Optional video block */}
-      {video && youtubeId(video.url) && (
-        <section className="relative px-6 md:px-12 pb-16 md:pb-24" data-testid="page-video">
-          <div className="max-w-[1100px] mx-auto">
-            {video.title && (
-              <h2 className="text-3xl md:text-4xl font-light tracking-[-0.02em] mb-8 italic-serif text-center">
-                {video.title}
-              </h2>
-            )}
-            <div className="relative rounded-2xl md:rounded-3xl overflow-hidden aspect-video bg-black">
-              <iframe
-                src={`https://www.youtube.com/embed/${youtubeId(video.url)}`}
-                title={video.title || heroTitle}
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                allowFullScreen
-                className="absolute inset-0 h-full w-full border-0"
-              />
-            </div>
-            {video.caption && (
-              <p className="mt-4 text-center text-sm text-muted-foreground">{video.caption}</p>
-            )}
-          </div>
-        </section>
-      )}
-
-
-      {/* Optional gallery block */}
-      {gallery && gallery.images?.length > 0 && (
-        <section className="relative px-6 md:px-12 pb-16 md:pb-24" data-testid="page-gallery">
-          <div className="max-w-[1100px] mx-auto">
-            {gallery.title && (
-              <h2 className="text-3xl md:text-4xl font-light tracking-[-0.02em] mb-8 italic-serif">
-                {gallery.title}
-              </h2>
-            )}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
-              {gallery.images.map((url, i) => (
-                <div key={`${url}-${i}`} className="relative rounded-2xl overflow-hidden aspect-[4/3] bg-card/60">
-                  <img
-                    src={img(url)}
-                    alt={`${gallery.title || heroTitle} image ${i + 1}`}
-                    className="h-full w-full object-cover"
-                    style={focalStyle(url)}
-                    loading="lazy"
-                  />
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-      )}
-
-      {/* Optional CTA block */}
-      {cta && (
-        <section className="relative px-6 md:px-12 pb-24 md:pb-32" data-testid="page-cta">
-          <div className="max-w-[1100px] mx-auto rounded-[1.5rem] md:rounded-[2rem] border border-border/60 bg-card/60 p-8 md:p-14 text-center">
-            <h2 className="text-3xl md:text-5xl font-light tracking-[-0.02em] break-words">{cta.title}</h2>
-            {cta.body && (
-              <p className="mt-4 max-w-2xl mx-auto text-base md:text-lg text-secondary-foreground leading-relaxed">
-                {cta.body}
-              </p>
-            )}
-            <div className="mt-8">
-              <a
-                href={cta.ctaUrl}
-                {...(isExternal(cta.ctaUrl) ? { target: "_blank", rel: "noreferrer" } : {})}
-                className="inline-flex items-center gap-2 rounded-full bg-primary text-primary-foreground px-6 py-3 text-sm hover:scale-[1.02] transition-transform"
-              >
-                {cta.ctaLabel} <ArrowRight className="h-4 w-4" />
-              </a>
-            </div>
-          </div>
-        </section>
-      )}
+      {/* Blocks positioned below (default) */}
+      {!isAbove(video) && VideoBlock}
+      {!isAbove(gallery) && GalleryBlock}
+      {!isAbove(cta) && CtaBlock}
 
       <Footer />
     </main>
