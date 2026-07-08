@@ -26,9 +26,11 @@ export const Route = createFileRoute("/admin/pages/$slug")({
 // Stable IDs so we can find-and-replace the optional gallery/cta blocks.
 const GALLERY_ID = "page-gallery";
 const CTA_ID = "page-cta";
+const VIDEO_ID = "page-video";
 
 type GallerySection = Extract<PageSection, { type: "gallery" }>;
 type CtaSection = Extract<PageSection, { type: "cta" }>;
+type VideoSection = Extract<PageSection, { type: "video" }>;
 
 function findSection<T extends PageSection["type"]>(
   sections: PageSection[],
