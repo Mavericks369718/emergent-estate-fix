@@ -178,6 +178,21 @@ function AdminPageEdit() {
     set({ sections: removeSection(page.sections, CTA_ID) });
   };
 
+  const addVideo = () => {
+    if (video) return;
+    set({ sections: upsertSection(page.sections, {
+      id: VIDEO_ID, type: "video", title: "Watch the feature", url: "", caption: "",
+    })});
+  };
+  const updateVideo = (patch: Partial<VideoSection>) => {
+    if (!video) return;
+    set({ sections: upsertSection(page.sections, { ...video, ...patch }) });
+  };
+  const removeVideoBlock = () => {
+    set({ sections: removeSection(page.sections, VIDEO_ID) });
+  };
+
+
   return (
     <AdminShell>
       <PageHeader
