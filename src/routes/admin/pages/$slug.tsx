@@ -70,6 +70,7 @@ function AdminPageEdit() {
 
   const gallery = findSection(page.sections, "gallery") as GallerySection | undefined;
   const cta = findSection(page.sections, "cta") as CtaSection | undefined;
+  const video = findSection(page.sections, "video") as VideoSection | undefined;
 
   const save = async () => {
     setBusy(true);
