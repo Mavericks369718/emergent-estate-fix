@@ -338,7 +338,10 @@ function AdminPageEdit() {
         </div>
         {gallery && (
           <div className="space-y-4">
-            <Field label="Gallery heading" value={gallery.title ?? ""} onChange={(x) => updateGallery({ title: x })} testId="page-gallery-title" placeholder="Gallery" />
+            <div className="grid sm:grid-cols-2 gap-4">
+              <Field label="Gallery heading" value={gallery.title ?? ""} onChange={(x) => updateGallery({ title: x })} testId="page-gallery-title" placeholder="Gallery" />
+              <PositionSelect value={gallery.position ?? "below"} onChange={(p) => updateGallery({ position: p })} testId="page-gallery-position" />
+            </div>
             <GalleryPicker
               label="Images"
               value={gallery.images}
