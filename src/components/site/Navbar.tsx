@@ -48,9 +48,17 @@ export function Navbar() {
     fetchNavPagesOnce().then(setNavPages);
   }, []);
 
+  const NAV_LABEL_OVERRIDES: Record<string, string> = {
+    mdl: "MDL",
+    collaboration: "Collaborate",
+  };
+
   const NAV_LINKS = [
     ...BASE_LINKS,
-    ...navPages.map((p) => ({ label: p.title, to: `/pages/${p.slug}` })),
+    ...navPages.map((p) => ({
+      label: NAV_LABEL_OVERRIDES[p.slug] ?? p.title,
+      to: `/pages/${p.slug}`,
+    })),
     TAIL_LINK,
   ];
 
