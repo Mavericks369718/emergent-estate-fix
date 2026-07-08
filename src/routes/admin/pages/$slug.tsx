@@ -7,7 +7,7 @@ import remarkGfm from "remark-gfm";
 import { AdminShell, PageHeader, Field } from "@/components/admin/AdminShell";
 import { ImagePicker } from "@/components/admin/ImagePicker";
 import { GalleryPicker } from "@/components/admin/GalleryPicker";
-import { api, ApiError, type PageDTO, type PageSection } from "@/lib/api";
+import { api, ApiError, type PageDTO, type PageSection, type SectionPosition } from "@/lib/api";
 import { cleanupOrphanImages, extractMarkdownImageUrls } from "@/lib/imageCleanup";
 
 export const Route = createFileRoute("/admin/pages/$slug")({
