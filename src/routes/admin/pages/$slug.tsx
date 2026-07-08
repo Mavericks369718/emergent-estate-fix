@@ -7,7 +7,7 @@ import remarkGfm from "remark-gfm";
 import { AdminShell, PageHeader, Field } from "@/components/admin/AdminShell";
 import { ImagePicker } from "@/components/admin/ImagePicker";
 import { GalleryPicker } from "@/components/admin/GalleryPicker";
-import { api, ApiError, type PageDTO, type PageSection } from "@/lib/api";
+import { api, ApiError, type PageDTO, type PageSection, type SectionPosition } from "@/lib/api";
 import { cleanupOrphanImages, extractMarkdownImageUrls } from "@/lib/imageCleanup";
 
 export const Route = createFileRoute("/admin/pages/$slug")({
@@ -338,7 +338,10 @@ function AdminPageEdit() {
         </div>
         {gallery && (
           <div className="space-y-4">
-            <Field label="Gallery heading" value={gallery.title ?? ""} onChange={(x) => updateGallery({ title: x })} testId="page-gallery-title" placeholder="Gallery" />
+            <div className="grid sm:grid-cols-2 gap-4">
+              <Field label="Gallery heading" value={gallery.title ?? ""} onChange={(x) => updateGallery({ title: x })} testId="page-gallery-title" placeholder="Gallery" />
+              <PositionSelect value={gallery.position ?? "below"} onChange={(p) => updateGallery({ position: p })} testId="page-gallery-position" />
+            </div>
             <GalleryPicker
               label="Images"
               value={gallery.images}
@@ -377,9 +380,8 @@ function AdminPageEdit() {
             <div className="sm:col-span-2">
               <Field label="Supporting text" value={cta.body ?? ""} onChange={(x) => updateCta({ body: x })} textarea testId="page-cta-body" placeholder="One short sentence under the heading" />
             </div>
-            <div className="sm:col-span-2">
-              <Field label="Button URL" value={cta.ctaUrl} onChange={(x) => updateCta({ ctaUrl: x })} testId="page-cta-url" placeholder="/contact" />
-            </div>
+            <Field label="Button URL" value={cta.ctaUrl} onChange={(x) => updateCta({ ctaUrl: x })} testId="page-cta-url" placeholder="/contact" />
+            <PositionSelect value={cta.position ?? "below"} onChange={(p) => updateCta({ position: p })} testId="page-cta-position" />
           </div>
         )}
       </section>
@@ -410,6 +412,7 @@ function AdminPageEdit() {
             <div className="sm:col-span-2">
               <Field label="YouTube URL" value={video.url} onChange={(x) => updateVideo({ url: x })} testId="page-video-url" placeholder="https://youtu.be/…" />
             </div>
+            <PositionSelect value={video.position ?? "below"} onChange={(p) => updateVideo({ position: p })} testId="page-video-position" />
           </div>
         )}
       </section>
@@ -452,5 +455,32 @@ export function MarkdownView({ source }: { source: string }) {
     <ReactMarkdown remarkPlugins={MD_PLUGINS} components={MD_COMPONENTS}>
       {source}
     </ReactMarkdown>
+  );
+}
+
+function PositionSelect({
+  value,
+  onChange,
+  testId,
+}: {
+  value: SectionPosition;
+  onChange: (p: SectionPosition) => void;
+  testId?: string;
+}) {
+  return (
+    <label className="block">
+      <span className="block text-[10px] uppercase tracking-[2.5px] text-muted-foreground mb-2">
+        Placement on page
+      </span>
+      <select
+        value={value}
+        onChange={(e) => onChange(e.target.value as SectionPosition)}
+        data-testid={testId}
+        className="w-full rounded-xl bg-input/40 border border-border outline-none px-3.5 py-2.5 text-sm"
+      >
+        <option value="above">Above the main content</option>
+        <option value="below">Below the main content</option>
+      </select>
+    </label>
   );
 }
