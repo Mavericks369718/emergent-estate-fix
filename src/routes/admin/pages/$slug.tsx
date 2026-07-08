@@ -412,6 +412,7 @@ function AdminPageEdit() {
             <div className="sm:col-span-2">
               <Field label="YouTube URL" value={video.url} onChange={(x) => updateVideo({ url: x })} testId="page-video-url" placeholder="https://youtu.be/…" />
             </div>
+            <PositionSelect value={video.position ?? "below"} onChange={(p) => updateVideo({ position: p })} testId="page-video-position" />
           </div>
         )}
       </section>
