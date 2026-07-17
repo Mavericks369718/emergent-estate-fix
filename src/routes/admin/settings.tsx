@@ -10,15 +10,28 @@ export const Route = createFileRoute("/admin/settings")({
   component: AdminSettings,
 });
 
+const emptyFounder = (): FounderDTO => ({
+  name: "",
+  role: "",
+  portrait: "",
+  tagline: "",
+  bio: [""],
+  quote: "",
+  stats: [],
+});
+
 function AdminSettings() {
-  const [founder, setFounder] = useState<FounderDTO | null>(null);
+  const [founder1, setFounder1] = useState<FounderDTO | null>(null);
+  const [founder2, setFounder2] = useState<FounderDTO | null>(null);
+  const [activeId, setActiveId] = useState<1 | 2>(1);
   const [busy, setBusy] = useState(false);
 
   useEffect(() => {
-    api.getFounder().then(setFounder).catch(() => setFounder(null));
+    api.getFounder(1).then(setFounder1).catch(() => setFounder1(emptyFounder()));
+    api.getFounder(2).then(setFounder2).catch(() => setFounder2(emptyFounder()));
   }, []);
 
-  if (!founder) {
+  if (!founder1 || !founder2) {
     return (
       <AdminShell>
         <PageHeader eyebrow="Brand" title="Settings" />
@@ -27,13 +40,15 @@ function AdminSettings() {
     );
   }
 
+  const founder = activeId === 1 ? founder1 : founder2;
+  const setFounder = activeId === 1 ? setFounder1 : setFounder2;
   const set = (k: keyof FounderDTO, v: any) => setFounder({ ...founder, [k]: v });
 
   const save = async () => {
     setBusy(true);
     try {
-      await api.updateFounder(founder);
-      toast.success("Founder updated");
+      await api.updateFounder(founder, activeId);
+      toast.success(`Founder ${activeId} saved`);
     } catch (err: any) {
       toast.error(err?.message || "Save failed");
     } finally {
@@ -43,14 +58,34 @@ function AdminSettings() {
 
   return (
     <AdminShell>
-      <PageHeader eyebrow="Brand" title="Founder details"
+      <PageHeader
+        eyebrow="Brand"
+        title="Founder details"
         action={
-          <button onClick={save} disabled={busy} data-testid="settings-save"
-            className="inline-flex items-center gap-2 rounded-full bg-primary text-primary-foreground px-5 py-2.5 text-sm hover:scale-[1.02] disabled:opacity-60 transition-transform">
+          <button
+            onClick={save}
+            disabled={busy}
+            data-testid="settings-save"
+            className="inline-flex items-center gap-2 rounded-full bg-primary text-primary-foreground px-5 py-2.5 text-sm hover:scale-[1.02] disabled:opacity-60 transition-transform"
+          >
             <Save className="h-3.5 w-3.5" /> {busy ? "Saving…" : "Save changes"}
           </button>
         }
       />
+
+      <div className="mb-5 inline-flex rounded-full liquid-glass p-1">
+        {[1, 2].map((n) => (
+          <button
+            key={n}
+            onClick={() => setActiveId(n as 1 | 2)}
+            className={`px-4 py-1.5 text-xs uppercase tracking-[2px] rounded-full transition-colors ${
+              activeId === n ? "bg-primary text-primary-foreground" : "text-muted-foreground"
+            }`}
+          >
+            Founder {n}
+          </button>
+        ))}
+      </div>
 
       <div className="rounded-3xl bg-card/60 border border-border/60 p-6 md:p-8 space-y-6" data-testid="founder-settings-form">
         <div className="grid sm:grid-cols-2 gap-4">
@@ -111,6 +146,10 @@ function AdminSettings() {
             </button>
           </div>
         </div>
+
+        <p className="text-xs text-muted-foreground">
+          Tip: Founder 2 only appears on the About page after you fill in a name and save. Leave all fields blank to hide it.
+        </p>
       </div>
     </AdminShell>
   );
