@@ -10,9 +10,11 @@ import legacy from "@/assets/legacy-courtyard.jpg";
 
 export const Route = createFileRoute("/about")({
   loader: async () => {
-    const founder = await api.getFounder();
-    return { founder };
+    const founders = await api.listFounders();
+    const founder = founders[0] ?? (await api.getFounder(1));
+    return { founder, founders };
   },
+
   component: AboutPage,
   head: () => ({
     meta: [
