@@ -64,6 +64,43 @@ export interface FounderDTO {
   stats: FounderStatDTO[];
 }
 
+const emptyFounder = (): FounderDTO => ({
+  name: "",
+  role: "",
+  portrait: "",
+  tagline: "",
+  bio: [""],
+  quote: "",
+  stats: [],
+});
+
+const founderStats = (value: any): FounderStatDTO[] => {
+  if (Array.isArray(value)) return value;
+  if (Array.isArray(value?.items)) return value.items;
+  return [];
+};
+
+const normalizeFounder = (value: any): FounderDTO => ({
+  name: value?.name ?? "",
+  role: value?.role ?? "",
+  portrait: value?.portrait ?? "",
+  tagline: value?.tagline ?? "",
+  bio: Array.isArray(value?.bio) ? value.bio : [""],
+  quote: value?.quote ?? "",
+  stats: founderStats(value?.stats),
+});
+
+const embeddedFounders = (stats: any): FounderDTO[] =>
+  Array.isArray(stats?.extraFounders) ? stats.extraFounders.map(normalizeFounder) : [];
+
+const hasFounderContent = (founder: FounderDTO) =>
+  Boolean(founder.name || founder.role || founder.portrait || founder.tagline || founder.quote || founder.bio.some(Boolean));
+
+const founderStatsPayload = (stats: FounderStatDTO[], extras: FounderDTO[]) => {
+  const visibleExtras = extras.filter(hasFounderContent);
+  return visibleExtras.length ? { items: stats, extraFounders: visibleExtras } : stats;
+};
+
 export interface UserDTO {
   id: string;
   email: string;
