@@ -10,9 +10,11 @@ import legacy from "@/assets/legacy-courtyard.jpg";
 
 export const Route = createFileRoute("/about")({
   loader: async () => {
-    const founder = await api.getFounder();
-    return { founder };
+    const founders = await api.listFounders();
+    const founder = founders[0] ?? (await api.getFounder(1));
+    return { founder, founders };
   },
+
   component: AboutPage,
   head: () => ({
     meta: [
@@ -27,7 +29,9 @@ export const Route = createFileRoute("/about")({
 });
 
 function AboutPage() {
-  const { founder } = Route.useLoaderData() as { founder: FounderDTO };
+  const { founder, founders } = Route.useLoaderData() as { founder: FounderDTO; founders: FounderDTO[] };
+  const extraFounders = (founders || []).slice(1).filter((f) => f.name || f.portrait || f.tagline);
+
   return (
     <main className="bg-background text-foreground" data-testid="about-page">
       <Navbar />
@@ -201,7 +205,91 @@ function AboutPage() {
         </div>
       </section>
 
+      {extraFounders.map((f, idx) => (
+        <section
+          key={idx}
+          className="relative py-24 md:py-36 px-6 md:px-12 border-t border-border/40"
+          data-testid={`about-founder-extra-${idx}`}
+        >
+          <div className="max-w-[1400px] mx-auto">
+            <motion.p {...fadeUp(0)} className="text-xs uppercase tracking-[4px] text-accent">
+              {idx === 0 ? "The Partner" : "The Team"}
+            </motion.p>
+
+            <div className="mt-10 md:mt-14 grid lg:grid-cols-[1.1fr_0.9fr] gap-12 md:gap-16 items-start">
+              <div className="space-y-10 order-2 lg:order-1">
+                {f.tagline && (
+                  <motion.p
+                    {...fadeUp(0.12)}
+                    className="text-2xl md:text-3xl lg:text-4xl tracking-[-0.025em] leading-[1.18] font-light text-foreground"
+                  >
+                    {f.tagline}
+                  </motion.p>
+                )}
+                {f.bio?.length > 0 && (
+                  <motion.div
+                    {...fadeUp(0.16)}
+                    className="space-y-6 text-base md:text-lg text-secondary-foreground leading-relaxed"
+                  >
+                    {f.bio.map((p, i) => (
+                      <p key={i}>{p}</p>
+                    ))}
+                  </motion.div>
+                )}
+                {f.quote && (
+                  <motion.figure {...fadeUp(0.2)} className="relative liquid-glass rounded-3xl p-7 md:p-9">
+                    <Quote className="h-7 w-7 text-accent" strokeWidth={1.2} />
+                    <blockquote className="mt-4 text-xl md:text-2xl italic-serif leading-snug text-foreground">
+                      "{f.quote}"
+                    </blockquote>
+                    <figcaption className="mt-5 text-xs uppercase tracking-[2.5px] text-muted-foreground">
+                      — {f.name}, {f.role}
+                    </figcaption>
+                  </motion.figure>
+                )}
+              </div>
+
+              <motion.div
+                {...fadeUp(0.08)}
+                className="relative rounded-[1.5rem] md:rounded-[2rem] overflow-hidden bg-card/60 border border-border/60 order-1 lg:order-2"
+              >
+                <div className="aspect-[4/5] overflow-hidden">
+                  {f.portrait ? (
+                    <img src={img(f.portrait)} alt={f.name} className="h-full w-full object-cover" loading="lazy" />
+                  ) : (
+                    <div className="h-full w-full bg-muted/30" />
+                  )}
+                </div>
+                <div className="absolute inset-0 bg-gradient-to-t from-background/85 via-background/10 to-transparent pointer-events-none" />
+                <div className="absolute inset-x-5 bottom-5 liquid-glass rounded-2xl p-5">
+                  <p className="text-[11px] uppercase tracking-[2.5px] text-accent">{f.role}</p>
+                  <h2 className="mt-1.5 text-2xl md:text-3xl tracking-[-0.02em] font-light">{f.name}</h2>
+                </div>
+              </motion.div>
+            </div>
+
+            {f.stats?.length > 0 && (
+              <div className="mt-20 md:mt-28 grid sm:grid-cols-3 gap-5 md:gap-6">
+                {f.stats.map((s, i) => (
+                  <motion.div
+                    key={i}
+                    {...fadeUp(0.05 + i * 0.07)}
+                    className="relative rounded-3xl bg-card/60 border border-border/60 p-8 md:p-10 hover-lift overflow-hidden group"
+                  >
+                    <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-accent/60 to-transparent opacity-60 group-hover:opacity-100 transition-opacity duration-700" />
+                    <p className="text-5xl md:text-6xl italic-serif text-foreground tracking-[-0.03em]">{s.value}</p>
+                    <p className="mt-4 text-xs uppercase tracking-[2.5px] text-muted-foreground">{s.label}</p>
+                    <div className="mt-8 h-px w-10 bg-accent/60" />
+                  </motion.div>
+                ))}
+              </div>
+            )}
+          </div>
+        </section>
+      ))}
+
       <Footer />
+
     </main>
   );
 }
