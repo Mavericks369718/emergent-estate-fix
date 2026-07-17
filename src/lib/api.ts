@@ -376,11 +376,10 @@ export const api = {
   },
 
   // -------------------- Founder --------------------
-  getFounder: async (): Promise<FounderDTO> => {
-    const { data, error } = await supabase.from("founder_settings").select("*").eq("id", 1).maybeSingle();
+  getFounder: async (id: number = 1): Promise<FounderDTO> => {
+    const { data, error } = await supabase.from("founder_settings").select("*").eq("id", id).maybeSingle();
     if (error) bail(error);
     if (!data) {
-      // Sensible defaults so the About page never breaks.
       return { name: "", role: "", portrait: "", tagline: "", bio: [""], quote: "", stats: [] };
     }
     return {
@@ -394,9 +393,23 @@ export const api = {
     };
   },
 
-  updateFounder: async (body: FounderDTO): Promise<FounderDTO> => {
+  listFounders: async (): Promise<FounderDTO[]> => {
+    const { data, error } = await supabase.from("founder_settings").select("*").order("id", { ascending: true });
+    if (error) bail(error);
+    return (data || []).map((d: any) => ({
+      name: d.name ?? "",
+      role: d.role ?? "",
+      portrait: d.portrait ?? "",
+      tagline: d.tagline ?? "",
+      bio: d.bio ?? [],
+      quote: d.quote ?? "",
+      stats: d.stats ?? [],
+    }));
+  },
+
+  updateFounder: async (body: FounderDTO, id: number = 1): Promise<FounderDTO> => {
     const row = {
-      id: 1,
+      id,
       name: body.name,
       role: body.role,
       portrait: body.portrait,
@@ -421,6 +434,7 @@ export const api = {
       stats: data.stats,
     };
   },
+
 
   // -------------------- Site contact (single-row settings) --------------------
   getSiteContact: async (): Promise<SiteContactDTO> => {
