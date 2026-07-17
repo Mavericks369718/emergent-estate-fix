@@ -414,46 +414,57 @@ export const api = {
 
   // -------------------- Founder --------------------
   getFounder: async (id: number = 1): Promise<FounderDTO> => {
-    const { data, error } = await supabase.from("founder_settings").select("*").eq("id", id).maybeSingle();
+    const { data, error } = await supabase.from("founder_settings").select("*").eq("id", 1).maybeSingle();
     if (error) bail(error);
     if (!data) {
-      return { name: "", role: "", portrait: "", tagline: "", bio: [""], quote: "", stats: [] };
+      return emptyFounder();
     }
-    return {
-      name: data.name ?? "",
-      role: data.role ?? "",
-      portrait: data.portrait ?? "",
-      tagline: data.tagline ?? "",
-      bio: data.bio ?? [],
-      quote: data.quote ?? "",
-      stats: data.stats ?? [],
-    };
+    if (id > 1) {
+      return embeddedFounders(data.stats)[id - 2] ?? emptyFounder();
+    }
+    return normalizeFounder(data);
   },
 
   listFounders: async (): Promise<FounderDTO[]> => {
-    const { data, error } = await supabase.from("founder_settings").select("*").order("id", { ascending: true });
+    const { data, error } = await supabase.from("founder_settings").select("*").eq("id", 1).maybeSingle();
     if (error) bail(error);
-    return (data || []).map((d: any) => ({
-      name: d.name ?? "",
-      role: d.role ?? "",
-      portrait: d.portrait ?? "",
-      tagline: d.tagline ?? "",
-      bio: d.bio ?? [],
-      quote: d.quote ?? "",
-      stats: d.stats ?? [],
-    }));
+    if (!data) return [emptyFounder()];
+    return [normalizeFounder(data), ...embeddedFounders(data.stats)].filter((founder, index) => index === 0 || hasFounderContent(founder));
   },
 
   updateFounder: async (body: FounderDTO, id: number = 1): Promise<FounderDTO> => {
+    if (id > 1) {
+      const { data: current, error: readError } = await supabase.from("founder_settings").select("*").eq("id", 1).maybeSingle();
+      if (readError) bail(readError);
+      const primary = current ? normalizeFounder(current) : emptyFounder();
+      const extras = current ? embeddedFounders(current.stats) : [];
+      extras[id - 2] = body;
+      const row = {
+        id: 1,
+        name: primary.name,
+        role: primary.role,
+        portrait: primary.portrait,
+        tagline: primary.tagline,
+        bio: primary.bio,
+        quote: primary.quote,
+        stats: founderStatsPayload(primary.stats, extras),
+      };
+      const { error } = await supabase.from("founder_settings").upsert(row, { onConflict: "id" });
+      if (error) bail(error);
+      return body;
+    }
+    const { data: current, error: readError } = await supabase.from("founder_settings").select("stats").eq("id", 1).maybeSingle();
+    if (readError) bail(readError);
+    const extras = current ? embeddedFounders(current.stats) : [];
     const row = {
-      id,
+      id: 1,
       name: body.name,
       role: body.role,
       portrait: body.portrait,
       tagline: body.tagline,
       bio: body.bio,
       quote: body.quote,
-      stats: body.stats,
+      stats: founderStatsPayload(body.stats, extras),
     };
     const { data, error } = await supabase
       .from("founder_settings")
@@ -468,7 +479,7 @@ export const api = {
       tagline: data.tagline,
       bio: data.bio,
       quote: data.quote,
-      stats: data.stats,
+      stats: founderStats(data.stats),
     };
   },
 
