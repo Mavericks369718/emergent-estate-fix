@@ -29,7 +29,9 @@ export const Route = createFileRoute("/about")({
 });
 
 function AboutPage() {
-  const { founder } = Route.useLoaderData() as { founder: FounderDTO };
+  const { founder, founders } = Route.useLoaderData() as { founder: FounderDTO; founders: FounderDTO[] };
+  const extraFounders = (founders || []).slice(1).filter((f) => f.name || f.portrait || f.tagline);
+
   return (
     <main className="bg-background text-foreground" data-testid="about-page">
       <Navbar />
