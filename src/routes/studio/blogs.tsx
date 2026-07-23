@@ -7,7 +7,7 @@ import { ImagePicker } from "@/components/admin/ImagePicker";
 import { api, type BlogDTO, type BlogBlockDTO } from "@/lib/api";
 import { cleanupOrphanImages } from "@/lib/imageCleanup";
 
-export const Route = createFileRoute("/admin/blogs")({
+export const Route = createFileRoute("/studio/blogs")({
   component: AdminBlogs,
 });
 

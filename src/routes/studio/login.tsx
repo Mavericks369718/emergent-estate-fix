@@ -5,7 +5,7 @@ import { motion } from "framer-motion";
 import { ArrowRight, Lock } from "lucide-react";
 import { api, ApiError } from "@/lib/api";
 
-export const Route = createFileRoute("/admin/login")({
+export const Route = createFileRoute("/studio/login")({
   component: AdminLogin,
 });
 
@@ -21,7 +21,7 @@ function AdminLogin() {
     try {
       await api.login(email, password);
       toast.success("Welcome back");
-      navigate({ to: "/admin" });
+      navigate({ to: "/studio" });
     } catch (err) {
       const m = err instanceof ApiError ? err.message : "Login failed";
       toast.error(m);

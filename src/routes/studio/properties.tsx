@@ -8,7 +8,7 @@ import { GalleryPicker } from "@/components/admin/GalleryPicker";
 import { api, type PropertyDTO } from "@/lib/api";
 import { cleanupOrphanImages } from "@/lib/imageCleanup";
 
-export const Route = createFileRoute("/admin/properties")({
+export const Route = createFileRoute("/studio/properties")({
   component: AdminProperties,
 });
 

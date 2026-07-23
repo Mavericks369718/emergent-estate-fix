@@ -17,15 +17,15 @@ import { toast } from "sonner";
 import { useAdminUser, signOutAdmin } from "@/lib/useAdminUser";
 
 const NAV = [
-  { to: "/admin", label: "Dashboard", icon: LayoutDashboard, end: true },
-  { to: "/admin/properties", label: "Properties", icon: HomeIcon },
-  { to: "/admin/blogs", label: "Blogs", icon: Newspaper },
-  { to: "/admin/pages", label: "Pages", icon: FileText },
-  { to: "/admin/inquiries", label: "Inquiries", icon: Inbox },
-  { to: "/admin/media", label: "Media", icon: ImageIcon },
-  { to: "/admin/contact", label: "Contact", icon: Phone },
-  { to: "/admin/settings", label: "Settings", icon: SettingsIcon },
-  { to: "/admin/account", label: "Account", icon: UserCog },
+  { to: "/studio", label: "Dashboard", icon: LayoutDashboard, end: true },
+  { to: "/studio/properties", label: "Properties", icon: HomeIcon },
+  { to: "/studio/blogs", label: "Blogs", icon: Newspaper },
+  { to: "/studio/pages", label: "Pages", icon: FileText },
+  { to: "/studio/inquiries", label: "Inquiries", icon: Inbox },
+  { to: "/studio/media", label: "Media", icon: ImageIcon },
+  { to: "/studio/contact", label: "Contact", icon: Phone },
+  { to: "/studio/settings", label: "Settings", icon: SettingsIcon },
+  { to: "/studio/account", label: "Account", icon: UserCog },
 ];
 
 export function AdminShell({ children }: { children: ReactNode }) {
@@ -43,7 +43,7 @@ export function AdminShell({ children }: { children: ReactNode }) {
   if (user === null) {
     // Redirect once on next tick to avoid running navigate during render.
     if (typeof window !== "undefined") {
-      queueMicrotask(() => navigate({ to: "/admin/login" }));
+      queueMicrotask(() => navigate({ to: "/studio/login" }));
     }
     return null;
   }
@@ -55,7 +55,7 @@ export function AdminShell({ children }: { children: ReactNode }) {
     <div className="min-h-screen bg-background text-foreground flex" data-testid="admin-shell">
       {/* Sidebar */}
       <aside className="w-64 shrink-0 border-r border-border/60 bg-card/40 backdrop-blur-xl flex flex-col">
-        <Link to="/admin" className="px-6 py-7 border-b border-border/60 block">
+        <Link to="/studio" className="px-6 py-7 border-b border-border/60 block">
           <p className="text-[11px] uppercase tracking-[3px] text-accent">Admin</p>
           <p className="mt-1 text-lg tracking-[-0.02em] italic-serif">South Delhi</p>
         </Link>
@@ -88,7 +88,7 @@ export function AdminShell({ children }: { children: ReactNode }) {
               try {
                 await signOutAdmin();
                 toast.success("Signed out");
-                navigate({ to: "/admin/login" });
+                navigate({ to: "/studio/login" });
               } catch {
                 toast.error("Logout failed");
               }

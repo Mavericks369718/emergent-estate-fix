@@ -6,7 +6,7 @@ import { AdminShell, PageHeader, Field } from "@/components/admin/AdminShell";
 import { ImagePicker } from "@/components/admin/ImagePicker";
 import { api, type FounderDTO } from "@/lib/api";
 
-export const Route = createFileRoute("/admin/settings")({
+export const Route = createFileRoute("/studio/settings")({
   component: AdminSettings,
 });
 

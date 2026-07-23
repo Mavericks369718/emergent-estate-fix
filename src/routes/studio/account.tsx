@@ -6,7 +6,7 @@ import { AdminShell, PageHeader, Field } from "@/components/admin/AdminShell";
 import { useAdminUser } from "@/lib/useAdminUser";
 import { supabase } from "@/lib/supabase";
 
-export const Route = createFileRoute("/admin/account")({
+export const Route = createFileRoute("/studio/account")({
   component: AdminAccount,
 });
 

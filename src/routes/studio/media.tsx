@@ -5,7 +5,7 @@ import { Upload, Trash2, Copy, Search, Loader2 } from "lucide-react";
 import { AdminShell, PageHeader } from "@/components/admin/AdminShell";
 import { api, type MediaDTO } from "@/lib/api";
 
-export const Route = createFileRoute("/admin/media")({
+export const Route = createFileRoute("/studio/media")({
   component: AdminMedia,
 });
 

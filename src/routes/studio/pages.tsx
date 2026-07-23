@@ -6,13 +6,13 @@ import { AdminShell, PageHeader } from "@/components/admin/AdminShell";
 import { api, type PageDTO } from "@/lib/api";
 import { cleanupOrphanImages, extractMarkdownImageUrls } from "@/lib/imageCleanup";
 
-export const Route = createFileRoute("/admin/pages")({
+export const Route = createFileRoute("/studio/pages")({
   component: AdminPages,
 });
 
 function AdminPages() {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
-  const isEditorRoute = pathname.startsWith("/admin/pages/");
+  const isEditorRoute = pathname.startsWith("/studio/pages/");
   const [rows, setRows] = useState<PageDTO[]>([]);
   const [creating, setCreating] = useState(false);
   const [newSlug, setNewSlug] = useState("");
@@ -148,7 +148,7 @@ function AdminPages() {
                 </td>
                 <td className="px-5 py-4 text-right">
                   <div className="inline-flex items-center gap-2">
-                    <Link to="/admin/pages/$slug" params={{ slug: p.slug }} data-testid={`page-edit-${i}`}
+                    <Link to="/studio/pages/$slug" params={{ slug: p.slug }} data-testid={`page-edit-${i}`}
                       title="Edit this page"
                       className="inline-flex items-center gap-1.5 rounded-full bg-primary text-primary-foreground px-3.5 py-1.5 text-xs hover:scale-[1.02] transition-transform">
                       <Pencil className="h-3.5 w-3.5" strokeWidth={1.6} /> Edit

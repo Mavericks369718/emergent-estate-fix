@@ -9,7 +9,7 @@ const STATUSES: ("All" | "new" | "read" | "replied" | "archived")[] = [
   "All", "new", "read", "replied", "archived",
 ];
 
-export const Route = createFileRoute("/admin/inquiries")({
+export const Route = createFileRoute("/studio/inquiries")({
   component: AdminInquiries,
 });
 
