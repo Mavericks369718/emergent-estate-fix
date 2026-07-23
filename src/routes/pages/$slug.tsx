@@ -7,7 +7,7 @@ import { fadeUp } from "@/lib/motion";
 import { api, ApiError, type PageDTO, type PageSection } from "@/lib/api";
 import { img } from "@/lib/imageMap";
 import { focalStyle } from "@/lib/imageFocal";
-import { MarkdownView } from "@/routes/admin/pages/$slug";
+import { MarkdownView } from "@/routes/studio/pages/$slug";
 
 export const Route = createFileRoute("/pages/$slug")({
   loader: async ({ params }) => {
