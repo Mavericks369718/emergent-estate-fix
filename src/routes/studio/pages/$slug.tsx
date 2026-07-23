@@ -10,7 +10,7 @@ import { GalleryPicker } from "@/components/admin/GalleryPicker";
 import { api, ApiError, type PageDTO, type PageSection, type SectionPosition } from "@/lib/api";
 import { cleanupOrphanImages, extractMarkdownImageUrls } from "@/lib/imageCleanup";
 
-export const Route = createFileRoute("/admin/pages/$slug")({
+export const Route = createFileRoute("/studio/pages/$slug")({
   loader: async ({ params }) => {
     try {
       const page = await api.getPage(params.slug);
@@ -200,7 +200,7 @@ function AdminPageEdit() {
         title={page.title || page.slug}
         action={
           <div className="flex gap-2">
-            <button onClick={() => navigate({ to: "/admin/pages" })} className="rounded-full liquid-glass px-4 py-2 text-sm inline-flex items-center gap-2" data-testid="page-edit-back">
+            <button onClick={() => navigate({ to: "/studio/pages" })} className="rounded-full liquid-glass px-4 py-2 text-sm inline-flex items-center gap-2" data-testid="page-edit-back">
               <ArrowLeft className="h-3.5 w-3.5" /> All pages
             </button>
             <a href={`/pages/${page.slug}`} target="_blank" rel="noreferrer"

@@ -5,7 +5,7 @@ import { AdminShell, PageHeader } from "@/components/admin/AdminShell";
 import { api } from "@/lib/api";
 import { ArrowUpRight, Home, Newspaper, Inbox, ImageIcon } from "lucide-react";
 
-export const Route = createFileRoute("/admin/")({
+export const Route = createFileRoute("/studio/")({
   component: AdminDashboard,
 });
 
@@ -16,10 +16,10 @@ function AdminDashboard() {
   }, []);
 
   const cards = [
-    { label: "Properties", value: stats?.properties_total ?? "—", sub: `${stats?.properties_published ?? 0} published · ${stats?.properties_drafts ?? 0} draft`, to: "/admin/properties", icon: Home },
-    { label: "Essays", value: stats?.blogs_total ?? "—", sub: `${stats?.blogs_published ?? 0} published · ${stats?.blogs_drafts ?? 0} draft`, to: "/admin/blogs", icon: Newspaper },
-    { label: "New inquiries", value: stats?.inquiries_new ?? "—", sub: `${stats?.inquiries_this_week ?? 0} this week · ${stats?.inquiries_total ?? 0} total`, to: "/admin/inquiries", icon: Inbox },
-    { label: "Media library", value: "—", sub: "Reusable image library", to: "/admin/media", icon: ImageIcon },
+    { label: "Properties", value: stats?.properties_total ?? "—", sub: `${stats?.properties_published ?? 0} published · ${stats?.properties_drafts ?? 0} draft`, to: "/studio/properties", icon: Home },
+    { label: "Essays", value: stats?.blogs_total ?? "—", sub: `${stats?.blogs_published ?? 0} published · ${stats?.blogs_drafts ?? 0} draft`, to: "/studio/blogs", icon: Newspaper },
+    { label: "New inquiries", value: stats?.inquiries_new ?? "—", sub: `${stats?.inquiries_this_week ?? 0} this week · ${stats?.inquiries_total ?? 0} total`, to: "/studio/inquiries", icon: Inbox },
+    { label: "Media library", value: "—", sub: "Reusable image library", to: "/studio/media", icon: ImageIcon },
   ];
 
   return (

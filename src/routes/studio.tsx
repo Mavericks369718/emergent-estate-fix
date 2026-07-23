@@ -1,6 +1,6 @@
 import { createFileRoute, Outlet } from "@tanstack/react-router";
 
-export const Route = createFileRoute("/admin")({
+export const Route = createFileRoute("/studio")({
   component: AdminLayout,
   head: () => ({ meta: [{ title: "Admin — South Delhi Farms & Floors" }] }),
 });

@@ -6,7 +6,7 @@ import { AdminShell, PageHeader, Field } from "@/components/admin/AdminShell";
 import { api, type SiteContactDTO } from "@/lib/api";
 import { refreshSiteContact } from "@/lib/useSiteContact";
 
-export const Route = createFileRoute("/admin/contact")({
+export const Route = createFileRoute("/studio/contact")({
   component: AdminContact,
 });
 
