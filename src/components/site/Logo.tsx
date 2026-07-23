@@ -1,6 +1,6 @@
 import logoAsset from "@/assets/south-delhi-logo.asset.json";
 
-export function Logo({ className = "h-9 w-9" }: { className?: string }) {
+export function Logo({ className = "h-9 w-auto" }: { className?: string }) {
   return (
     <img
       src={logoAsset.url}
