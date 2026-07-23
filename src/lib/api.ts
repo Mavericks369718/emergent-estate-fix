@@ -470,17 +470,19 @@ export const api = {
       .from("founder_settings")
       .upsert(row, { onConflict: "id" })
       .select("*")
-      .single();
+      .maybeSingle();
     if (error) bail(error);
+    const saved = data ?? row;
     return {
-      name: data.name,
-      role: data.role,
-      portrait: data.portrait,
-      tagline: data.tagline,
-      bio: data.bio,
-      quote: data.quote,
-      stats: founderStats(data.stats),
+      name: saved.name,
+      role: saved.role,
+      portrait: saved.portrait,
+      tagline: saved.tagline,
+      bio: saved.bio,
+      quote: saved.quote,
+      stats: founderStats(saved.stats),
     };
+
   },
 
 
@@ -523,20 +525,22 @@ export const api = {
       .from("site_contact")
       .upsert({ id: 1, ...body }, { onConflict: "id" })
       .select("*")
-      .single();
+      .maybeSingle();
     if (error) bail(error);
+    const saved: any = data ?? { id: 1, ...body };
     return {
-      phone: data.phone ?? "",
-      email: data.email ?? "",
-      address: data.address ?? "",
-      instagram_url: data.instagram_url ?? "",
-      linkedin_url: data.linkedin_url ?? "",
-      twitter_url: data.twitter_url ?? "",
-      youtube_url: data.youtube_url ?? "",
-      whatsapp_url: (data as any).whatsapp_url ?? "",
-      facebook_url: (data as any).facebook_url ?? "",
+      phone: saved.phone ?? "",
+      email: saved.email ?? "",
+      address: saved.address ?? "",
+      instagram_url: saved.instagram_url ?? "",
+      linkedin_url: saved.linkedin_url ?? "",
+      twitter_url: saved.twitter_url ?? "",
+      youtube_url: saved.youtube_url ?? "",
+      whatsapp_url: saved.whatsapp_url ?? "",
+      facebook_url: saved.facebook_url ?? "",
     };
   },
+
 
   // -------------------- Inquiries --------------------
   createInquiry: async (body: {

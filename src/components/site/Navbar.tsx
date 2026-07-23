@@ -85,13 +85,9 @@ export function Navbar() {
             className="flex items-center gap-3 text-foreground shrink-0"
             data-testid="nav-logo"
           >
-            <Logo className="h-8 w-8 text-foreground" />
-            <span className="hidden sm:block text-[13px] tracking-[0.18em] uppercase font-medium">
-              South Delhi
-              <span className="block text-[10px] tracking-[0.32em] text-muted-foreground -mt-0.5">
-                Farms · Floors
-              </span>
-            </span>
+            <Logo className="h-9 w-auto" />
+            <span className="sr-only">South Delhi Farms &amp; Floors</span>
+
           </Link>
 
           {/* Center nav */}

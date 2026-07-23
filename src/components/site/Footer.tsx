@@ -44,14 +44,10 @@ export function Footer() {
           <div className="grain" />
 
           <Link to="/" className="relative flex items-center gap-3 text-foreground">
-            <Logo className="h-9 w-9" />
-            <div className="text-[13px] tracking-[0.18em] uppercase">
-              South Delhi
-              <span className="block text-[10px] tracking-[0.32em] text-muted-foreground -mt-0.5">
-                Farms · Floors
-              </span>
-            </div>
+            <Logo className="h-10 w-auto" />
+            <span className="sr-only">South Delhi Farms &amp; Floors</span>
           </Link>
+
 
           <div className="relative">
             <p className="max-w-md text-2xl md:text-3xl italic-serif text-foreground leading-snug">
@@ -85,9 +81,10 @@ export function Footer() {
             className="absolute right-6 top-6 md:right-10 md:top-10"
           >
             <div className="liquid-glass rounded-2xl px-4 py-3 flex items-center gap-2.5">
-              <div className="h-7 w-7 rounded-md bg-accent/80 grid place-items-center">
-                <Logo className="h-4 w-4 text-background" />
+              <div className="h-7 w-7 rounded-md bg-accent/80 grid place-items-center overflow-hidden">
+                <span className="text-[10px] font-bold text-background">SD</span>
               </div>
+
               <span className="text-[10px] uppercase tracking-[2.5px] text-foreground">
                 Private Access
               </span>
