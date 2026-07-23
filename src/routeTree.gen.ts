@@ -9,35 +9,35 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as StudioRouteImport } from './routes/studio'
 import { Route as ContactRouteImport } from './routes/contact'
-import { Route as AdminRouteImport } from './routes/admin'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as StudioIndexRouteImport } from './routes/studio/index'
 import { Route as PropertiesIndexRouteImport } from './routes/properties/index'
 import { Route as BlogsIndexRouteImport } from './routes/blogs/index'
-import { Route as AdminIndexRouteImport } from './routes/admin/index'
+import { Route as StudioSettingsRouteImport } from './routes/studio/settings'
+import { Route as StudioPropertiesRouteImport } from './routes/studio/properties'
+import { Route as StudioPagesRouteImport } from './routes/studio/pages'
+import { Route as StudioMediaRouteImport } from './routes/studio/media'
+import { Route as StudioLoginRouteImport } from './routes/studio/login'
+import { Route as StudioInquiriesRouteImport } from './routes/studio/inquiries'
+import { Route as StudioContactRouteImport } from './routes/studio/contact'
+import { Route as StudioBlogsRouteImport } from './routes/studio/blogs'
+import { Route as StudioAccountRouteImport } from './routes/studio/account'
 import { Route as PropertiesSlugRouteImport } from './routes/properties/$slug'
 import { Route as PagesSlugRouteImport } from './routes/pages/$slug'
 import { Route as BlogsSlugRouteImport } from './routes/blogs/$slug'
-import { Route as AdminSettingsRouteImport } from './routes/admin/settings'
-import { Route as AdminPropertiesRouteImport } from './routes/admin/properties'
-import { Route as AdminPagesRouteImport } from './routes/admin/pages'
-import { Route as AdminMediaRouteImport } from './routes/admin/media'
-import { Route as AdminLoginRouteImport } from './routes/admin/login'
-import { Route as AdminInquiriesRouteImport } from './routes/admin/inquiries'
-import { Route as AdminContactRouteImport } from './routes/admin/contact'
-import { Route as AdminBlogsRouteImport } from './routes/admin/blogs'
-import { Route as AdminAccountRouteImport } from './routes/admin/account'
-import { Route as AdminPagesSlugRouteImport } from './routes/admin/pages/$slug'
+import { Route as StudioPagesSlugRouteImport } from './routes/studio/pages/$slug'
 
+const StudioRoute = StudioRouteImport.update({
+  id: '/studio',
+  path: '/studio',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ContactRoute = ContactRouteImport.update({
   id: '/contact',
   path: '/contact',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const AdminRoute = AdminRouteImport.update({
-  id: '/studio',
-  path: '/studio',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AboutRoute = AboutRouteImport.update({
@@ -50,6 +50,11 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const StudioIndexRoute = StudioIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => StudioRoute,
+} as any)
 const PropertiesIndexRoute = PropertiesIndexRouteImport.update({
   id: '/properties/',
   path: '/properties/',
@@ -60,10 +65,50 @@ const BlogsIndexRoute = BlogsIndexRouteImport.update({
   path: '/blogs/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AdminIndexRoute = AdminIndexRouteImport.update({
-  id: '/',
-  path: '/',
-  getParentRoute: () => AdminRoute,
+const StudioSettingsRoute = StudioSettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => StudioRoute,
+} as any)
+const StudioPropertiesRoute = StudioPropertiesRouteImport.update({
+  id: '/properties',
+  path: '/properties',
+  getParentRoute: () => StudioRoute,
+} as any)
+const StudioPagesRoute = StudioPagesRouteImport.update({
+  id: '/pages',
+  path: '/pages',
+  getParentRoute: () => StudioRoute,
+} as any)
+const StudioMediaRoute = StudioMediaRouteImport.update({
+  id: '/media',
+  path: '/media',
+  getParentRoute: () => StudioRoute,
+} as any)
+const StudioLoginRoute = StudioLoginRouteImport.update({
+  id: '/login',
+  path: '/login',
+  getParentRoute: () => StudioRoute,
+} as any)
+const StudioInquiriesRoute = StudioInquiriesRouteImport.update({
+  id: '/inquiries',
+  path: '/inquiries',
+  getParentRoute: () => StudioRoute,
+} as any)
+const StudioContactRoute = StudioContactRouteImport.update({
+  id: '/contact',
+  path: '/contact',
+  getParentRoute: () => StudioRoute,
+} as any)
+const StudioBlogsRoute = StudioBlogsRouteImport.update({
+  id: '/blogs',
+  path: '/blogs',
+  getParentRoute: () => StudioRoute,
+} as any)
+const StudioAccountRoute = StudioAccountRouteImport.update({
+  id: '/account',
+  path: '/account',
+  getParentRoute: () => StudioRoute,
 } as any)
 const PropertiesSlugRoute = PropertiesSlugRouteImport.update({
   id: '/properties/$slug',
@@ -80,130 +125,88 @@ const BlogsSlugRoute = BlogsSlugRouteImport.update({
   path: '/blogs/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AdminSettingsRoute = AdminSettingsRouteImport.update({
-  id: '/settings',
-  path: '/settings',
-  getParentRoute: () => AdminRoute,
-} as any)
-const AdminPropertiesRoute = AdminPropertiesRouteImport.update({
-  id: '/properties',
-  path: '/properties',
-  getParentRoute: () => AdminRoute,
-} as any)
-const AdminPagesRoute = AdminPagesRouteImport.update({
-  id: '/pages',
-  path: '/pages',
-  getParentRoute: () => AdminRoute,
-} as any)
-const AdminMediaRoute = AdminMediaRouteImport.update({
-  id: '/media',
-  path: '/media',
-  getParentRoute: () => AdminRoute,
-} as any)
-const AdminLoginRoute = AdminLoginRouteImport.update({
-  id: '/login',
-  path: '/login',
-  getParentRoute: () => AdminRoute,
-} as any)
-const AdminInquiriesRoute = AdminInquiriesRouteImport.update({
-  id: '/inquiries',
-  path: '/inquiries',
-  getParentRoute: () => AdminRoute,
-} as any)
-const AdminContactRoute = AdminContactRouteImport.update({
-  id: '/contact',
-  path: '/contact',
-  getParentRoute: () => AdminRoute,
-} as any)
-const AdminBlogsRoute = AdminBlogsRouteImport.update({
-  id: '/blogs',
-  path: '/blogs',
-  getParentRoute: () => AdminRoute,
-} as any)
-const AdminAccountRoute = AdminAccountRouteImport.update({
-  id: '/account',
-  path: '/account',
-  getParentRoute: () => AdminRoute,
-} as any)
-const AdminPagesSlugRoute = AdminPagesSlugRouteImport.update({
+const StudioPagesSlugRoute = StudioPagesSlugRouteImport.update({
   id: '/$slug',
   path: '/$slug',
-  getParentRoute: () => AdminPagesRoute,
+  getParentRoute: () => StudioPagesRoute,
 } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
-  '/studio': typeof AdminRouteWithChildren
   '/contact': typeof ContactRoute
-  '/studio/account': typeof AdminAccountRoute
-  '/studio/blogs': typeof AdminBlogsRoute
-  '/studio/contact': typeof AdminContactRoute
-  '/studio/inquiries': typeof AdminInquiriesRoute
-  '/studio/login': typeof AdminLoginRoute
-  '/studio/media': typeof AdminMediaRoute
-  '/studio/pages': typeof AdminPagesRouteWithChildren
-  '/studio/properties': typeof AdminPropertiesRoute
-  '/studio/settings': typeof AdminSettingsRoute
+  '/studio': typeof StudioRouteWithChildren
   '/blogs/$slug': typeof BlogsSlugRoute
   '/pages/$slug': typeof PagesSlugRoute
   '/properties/$slug': typeof PropertiesSlugRoute
-  '/studio/': typeof AdminIndexRoute
+  '/studio/account': typeof StudioAccountRoute
+  '/studio/blogs': typeof StudioBlogsRoute
+  '/studio/contact': typeof StudioContactRoute
+  '/studio/inquiries': typeof StudioInquiriesRoute
+  '/studio/login': typeof StudioLoginRoute
+  '/studio/media': typeof StudioMediaRoute
+  '/studio/pages': typeof StudioPagesRouteWithChildren
+  '/studio/properties': typeof StudioPropertiesRoute
+  '/studio/settings': typeof StudioSettingsRoute
   '/blogs/': typeof BlogsIndexRoute
   '/properties/': typeof PropertiesIndexRoute
-  '/studio/pages/$slug': typeof AdminPagesSlugRoute
+  '/studio/': typeof StudioIndexRoute
+  '/studio/pages/$slug': typeof StudioPagesSlugRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/contact': typeof ContactRoute
-  '/studio/account': typeof AdminAccountRoute
-  '/studio/blogs': typeof AdminBlogsRoute
-  '/studio/contact': typeof AdminContactRoute
-  '/studio/inquiries': typeof AdminInquiriesRoute
-  '/studio/login': typeof AdminLoginRoute
-  '/studio/media': typeof AdminMediaRoute
-  '/studio/pages': typeof AdminPagesRouteWithChildren
-  '/studio/properties': typeof AdminPropertiesRoute
-  '/studio/settings': typeof AdminSettingsRoute
   '/blogs/$slug': typeof BlogsSlugRoute
   '/pages/$slug': typeof PagesSlugRoute
   '/properties/$slug': typeof PropertiesSlugRoute
-  '/studio': typeof AdminIndexRoute
+  '/studio/account': typeof StudioAccountRoute
+  '/studio/blogs': typeof StudioBlogsRoute
+  '/studio/contact': typeof StudioContactRoute
+  '/studio/inquiries': typeof StudioInquiriesRoute
+  '/studio/login': typeof StudioLoginRoute
+  '/studio/media': typeof StudioMediaRoute
+  '/studio/pages': typeof StudioPagesRouteWithChildren
+  '/studio/properties': typeof StudioPropertiesRoute
+  '/studio/settings': typeof StudioSettingsRoute
   '/blogs': typeof BlogsIndexRoute
   '/properties': typeof PropertiesIndexRoute
-  '/studio/pages/$slug': typeof AdminPagesSlugRoute
+  '/studio': typeof StudioIndexRoute
+  '/studio/pages/$slug': typeof StudioPagesSlugRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
-  '/studio': typeof AdminRouteWithChildren
   '/contact': typeof ContactRoute
-  '/studio/account': typeof AdminAccountRoute
-  '/studio/blogs': typeof AdminBlogsRoute
-  '/studio/contact': typeof AdminContactRoute
-  '/studio/inquiries': typeof AdminInquiriesRoute
-  '/studio/login': typeof AdminLoginRoute
-  '/studio/media': typeof AdminMediaRoute
-  '/studio/pages': typeof AdminPagesRouteWithChildren
-  '/studio/properties': typeof AdminPropertiesRoute
-  '/studio/settings': typeof AdminSettingsRoute
+  '/studio': typeof StudioRouteWithChildren
   '/blogs/$slug': typeof BlogsSlugRoute
   '/pages/$slug': typeof PagesSlugRoute
   '/properties/$slug': typeof PropertiesSlugRoute
-  '/studio/': typeof AdminIndexRoute
+  '/studio/account': typeof StudioAccountRoute
+  '/studio/blogs': typeof StudioBlogsRoute
+  '/studio/contact': typeof StudioContactRoute
+  '/studio/inquiries': typeof StudioInquiriesRoute
+  '/studio/login': typeof StudioLoginRoute
+  '/studio/media': typeof StudioMediaRoute
+  '/studio/pages': typeof StudioPagesRouteWithChildren
+  '/studio/properties': typeof StudioPropertiesRoute
+  '/studio/settings': typeof StudioSettingsRoute
   '/blogs/': typeof BlogsIndexRoute
   '/properties/': typeof PropertiesIndexRoute
-  '/studio/pages/$slug': typeof AdminPagesSlugRoute
+  '/studio/': typeof StudioIndexRoute
+  '/studio/pages/$slug': typeof StudioPagesSlugRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
     | '/about'
-    | '/studio'
     | '/contact'
+    | '/studio'
+    | '/blogs/$slug'
+    | '/pages/$slug'
+    | '/properties/$slug'
     | '/studio/account'
     | '/studio/blogs'
     | '/studio/contact'
@@ -213,18 +216,18 @@ export interface FileRouteTypes {
     | '/studio/pages'
     | '/studio/properties'
     | '/studio/settings'
-    | '/blogs/$slug'
-    | '/pages/$slug'
-    | '/properties/$slug'
-    | '/studio/'
     | '/blogs/'
     | '/properties/'
+    | '/studio/'
     | '/studio/pages/$slug'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/about'
     | '/contact'
+    | '/blogs/$slug'
+    | '/pages/$slug'
+    | '/properties/$slug'
     | '/studio/account'
     | '/studio/blogs'
     | '/studio/contact'
@@ -234,19 +237,19 @@ export interface FileRouteTypes {
     | '/studio/pages'
     | '/studio/properties'
     | '/studio/settings'
-    | '/blogs/$slug'
-    | '/pages/$slug'
-    | '/properties/$slug'
-    | '/studio'
     | '/blogs'
     | '/properties'
+    | '/studio'
     | '/studio/pages/$slug'
   id:
     | '__root__'
     | '/'
     | '/about'
-    | '/studio'
     | '/contact'
+    | '/studio'
+    | '/blogs/$slug'
+    | '/pages/$slug'
+    | '/properties/$slug'
     | '/studio/account'
     | '/studio/blogs'
     | '/studio/contact'
@@ -256,20 +259,17 @@ export interface FileRouteTypes {
     | '/studio/pages'
     | '/studio/properties'
     | '/studio/settings'
-    | '/blogs/$slug'
-    | '/pages/$slug'
-    | '/properties/$slug'
-    | '/studio/'
     | '/blogs/'
     | '/properties/'
+    | '/studio/'
     | '/studio/pages/$slug'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AboutRoute: typeof AboutRoute
-  AdminRoute: typeof AdminRouteWithChildren
   ContactRoute: typeof ContactRoute
+  StudioRoute: typeof StudioRouteWithChildren
   BlogsSlugRoute: typeof BlogsSlugRoute
   PagesSlugRoute: typeof PagesSlugRoute
   PropertiesSlugRoute: typeof PropertiesSlugRoute
@@ -279,18 +279,18 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/studio': {
+      id: '/studio'
+      path: '/studio'
+      fullPath: '/studio'
+      preLoaderRoute: typeof StudioRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/contact': {
       id: '/contact'
       path: '/contact'
       fullPath: '/contact'
       preLoaderRoute: typeof ContactRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/studio': {
-      id: '/studio'
-      path: '/studio'
-      fullPath: '/studio'
-      preLoaderRoute: typeof AdminRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/about': {
@@ -307,6 +307,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/studio/': {
+      id: '/studio/'
+      path: '/'
+      fullPath: '/studio/'
+      preLoaderRoute: typeof StudioIndexRouteImport
+      parentRoute: typeof StudioRoute
+    }
     '/properties/': {
       id: '/properties/'
       path: '/properties'
@@ -321,12 +328,68 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof BlogsIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/studio/': {
-      id: '/studio/'
-      path: '/'
-      fullPath: '/studio/'
-      preLoaderRoute: typeof AdminIndexRouteImport
-      parentRoute: typeof AdminRoute
+    '/studio/settings': {
+      id: '/studio/settings'
+      path: '/settings'
+      fullPath: '/studio/settings'
+      preLoaderRoute: typeof StudioSettingsRouteImport
+      parentRoute: typeof StudioRoute
+    }
+    '/studio/properties': {
+      id: '/studio/properties'
+      path: '/properties'
+      fullPath: '/studio/properties'
+      preLoaderRoute: typeof StudioPropertiesRouteImport
+      parentRoute: typeof StudioRoute
+    }
+    '/studio/pages': {
+      id: '/studio/pages'
+      path: '/pages'
+      fullPath: '/studio/pages'
+      preLoaderRoute: typeof StudioPagesRouteImport
+      parentRoute: typeof StudioRoute
+    }
+    '/studio/media': {
+      id: '/studio/media'
+      path: '/media'
+      fullPath: '/studio/media'
+      preLoaderRoute: typeof StudioMediaRouteImport
+      parentRoute: typeof StudioRoute
+    }
+    '/studio/login': {
+      id: '/studio/login'
+      path: '/login'
+      fullPath: '/studio/login'
+      preLoaderRoute: typeof StudioLoginRouteImport
+      parentRoute: typeof StudioRoute
+    }
+    '/studio/inquiries': {
+      id: '/studio/inquiries'
+      path: '/inquiries'
+      fullPath: '/studio/inquiries'
+      preLoaderRoute: typeof StudioInquiriesRouteImport
+      parentRoute: typeof StudioRoute
+    }
+    '/studio/contact': {
+      id: '/studio/contact'
+      path: '/contact'
+      fullPath: '/studio/contact'
+      preLoaderRoute: typeof StudioContactRouteImport
+      parentRoute: typeof StudioRoute
+    }
+    '/studio/blogs': {
+      id: '/studio/blogs'
+      path: '/blogs'
+      fullPath: '/studio/blogs'
+      preLoaderRoute: typeof StudioBlogsRouteImport
+      parentRoute: typeof StudioRoute
+    }
+    '/studio/account': {
+      id: '/studio/account'
+      path: '/account'
+      fullPath: '/studio/account'
+      preLoaderRoute: typeof StudioAccountRouteImport
+      parentRoute: typeof StudioRoute
     }
     '/properties/$slug': {
       id: '/properties/$slug'
@@ -349,124 +412,62 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof BlogsSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/studio/settings': {
-      id: '/studio/settings'
-      path: '/settings'
-      fullPath: '/studio/settings'
-      preLoaderRoute: typeof AdminSettingsRouteImport
-      parentRoute: typeof AdminRoute
-    }
-    '/studio/properties': {
-      id: '/studio/properties'
-      path: '/properties'
-      fullPath: '/studio/properties'
-      preLoaderRoute: typeof AdminPropertiesRouteImport
-      parentRoute: typeof AdminRoute
-    }
-    '/studio/pages': {
-      id: '/studio/pages'
-      path: '/pages'
-      fullPath: '/studio/pages'
-      preLoaderRoute: typeof AdminPagesRouteImport
-      parentRoute: typeof AdminRoute
-    }
-    '/studio/media': {
-      id: '/studio/media'
-      path: '/media'
-      fullPath: '/studio/media'
-      preLoaderRoute: typeof AdminMediaRouteImport
-      parentRoute: typeof AdminRoute
-    }
-    '/studio/login': {
-      id: '/studio/login'
-      path: '/login'
-      fullPath: '/studio/login'
-      preLoaderRoute: typeof AdminLoginRouteImport
-      parentRoute: typeof AdminRoute
-    }
-    '/studio/inquiries': {
-      id: '/studio/inquiries'
-      path: '/inquiries'
-      fullPath: '/studio/inquiries'
-      preLoaderRoute: typeof AdminInquiriesRouteImport
-      parentRoute: typeof AdminRoute
-    }
-    '/studio/contact': {
-      id: '/studio/contact'
-      path: '/contact'
-      fullPath: '/studio/contact'
-      preLoaderRoute: typeof AdminContactRouteImport
-      parentRoute: typeof AdminRoute
-    }
-    '/studio/blogs': {
-      id: '/studio/blogs'
-      path: '/blogs'
-      fullPath: '/studio/blogs'
-      preLoaderRoute: typeof AdminBlogsRouteImport
-      parentRoute: typeof AdminRoute
-    }
-    '/studio/account': {
-      id: '/studio/account'
-      path: '/account'
-      fullPath: '/studio/account'
-      preLoaderRoute: typeof AdminAccountRouteImport
-      parentRoute: typeof AdminRoute
-    }
     '/studio/pages/$slug': {
       id: '/studio/pages/$slug'
       path: '/$slug'
       fullPath: '/studio/pages/$slug'
-      preLoaderRoute: typeof AdminPagesSlugRouteImport
-      parentRoute: typeof AdminPagesRoute
+      preLoaderRoute: typeof StudioPagesSlugRouteImport
+      parentRoute: typeof StudioPagesRoute
     }
   }
 }
 
-interface AdminPagesRouteChildren {
-  AdminPagesSlugRoute: typeof AdminPagesSlugRoute
+interface StudioPagesRouteChildren {
+  StudioPagesSlugRoute: typeof StudioPagesSlugRoute
 }
 
-const AdminPagesRouteChildren: AdminPagesRouteChildren = {
-  AdminPagesSlugRoute: AdminPagesSlugRoute,
+const StudioPagesRouteChildren: StudioPagesRouteChildren = {
+  StudioPagesSlugRoute: StudioPagesSlugRoute,
 }
 
-const AdminPagesRouteWithChildren = AdminPagesRoute._addFileChildren(
-  AdminPagesRouteChildren,
+const StudioPagesRouteWithChildren = StudioPagesRoute._addFileChildren(
+  StudioPagesRouteChildren,
 )
 
-interface AdminRouteChildren {
-  AdminAccountRoute: typeof AdminAccountRoute
-  AdminBlogsRoute: typeof AdminBlogsRoute
-  AdminContactRoute: typeof AdminContactRoute
-  AdminInquiriesRoute: typeof AdminInquiriesRoute
-  AdminLoginRoute: typeof AdminLoginRoute
-  AdminMediaRoute: typeof AdminMediaRoute
-  AdminPagesRoute: typeof AdminPagesRouteWithChildren
-  AdminPropertiesRoute: typeof AdminPropertiesRoute
-  AdminSettingsRoute: typeof AdminSettingsRoute
-  AdminIndexRoute: typeof AdminIndexRoute
+interface StudioRouteChildren {
+  StudioAccountRoute: typeof StudioAccountRoute
+  StudioBlogsRoute: typeof StudioBlogsRoute
+  StudioContactRoute: typeof StudioContactRoute
+  StudioInquiriesRoute: typeof StudioInquiriesRoute
+  StudioLoginRoute: typeof StudioLoginRoute
+  StudioMediaRoute: typeof StudioMediaRoute
+  StudioPagesRoute: typeof StudioPagesRouteWithChildren
+  StudioPropertiesRoute: typeof StudioPropertiesRoute
+  StudioSettingsRoute: typeof StudioSettingsRoute
+  StudioIndexRoute: typeof StudioIndexRoute
 }
 
-const AdminRouteChildren: AdminRouteChildren = {
-  AdminAccountRoute: AdminAccountRoute,
-  AdminBlogsRoute: AdminBlogsRoute,
-  AdminContactRoute: AdminContactRoute,
-  AdminInquiriesRoute: AdminInquiriesRoute,
-  AdminLoginRoute: AdminLoginRoute,
-  AdminMediaRoute: AdminMediaRoute,
-  AdminPagesRoute: AdminPagesRouteWithChildren,
-  AdminPropertiesRoute: AdminPropertiesRoute,
-  AdminSettingsRoute: AdminSettingsRoute,
-  AdminIndexRoute: AdminIndexRoute,
+const StudioRouteChildren: StudioRouteChildren = {
+  StudioAccountRoute: StudioAccountRoute,
+  StudioBlogsRoute: StudioBlogsRoute,
+  StudioContactRoute: StudioContactRoute,
+  StudioInquiriesRoute: StudioInquiriesRoute,
+  StudioLoginRoute: StudioLoginRoute,
+  StudioMediaRoute: StudioMediaRoute,
+  StudioPagesRoute: StudioPagesRouteWithChildren,
+  StudioPropertiesRoute: StudioPropertiesRoute,
+  StudioSettingsRoute: StudioSettingsRoute,
+  StudioIndexRoute: StudioIndexRoute,
 }
 
-const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
+const StudioRouteWithChildren =
+  StudioRoute._addFileChildren(StudioRouteChildren)
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AboutRoute: AboutRoute,
-  AdminRoute: AdminRouteWithChildren,
   ContactRoute: ContactRoute,
+  StudioRoute: StudioRouteWithChildren,
   BlogsSlugRoute: BlogsSlugRoute,
   PagesSlugRoute: PagesSlugRoute,
   PropertiesSlugRoute: PropertiesSlugRoute,
