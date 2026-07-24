@@ -1,4 +1,21 @@
+import { useState } from "react";
+import logoAsset from "@/assets/south-delhi-logo.asset.json";
+
 export function Logo({ className = "h-9 w-auto" }: { className?: string }) {
+  const [failed, setFailed] = useState(false);
+
+  if (!failed) {
+    return (
+      <img
+        src={logoAsset.url}
+        alt="South Delhi Farms & Floors"
+        className={className}
+        onError={() => setFailed(true)}
+        draggable={false}
+      />
+    );
+  }
+
   return (
     <span
       className={`${className} inline-flex flex-col items-start justify-center leading-none select-none`}
