@@ -1,5 +1,5 @@
 import { useState } from "react";
-import logoAsset from "@/assets/south-delhi-logo.asset.json";
+import logoUrl from "@/assets/south-delhi-logo.png";
 
 export function Logo({ className = "h-9 w-auto" }: { className?: string }) {
   const [failed, setFailed] = useState(false);
