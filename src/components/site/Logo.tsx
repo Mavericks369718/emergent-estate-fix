@@ -7,7 +7,7 @@ export function Logo({ className = "h-9 w-auto" }: { className?: string }) {
   if (!failed) {
     return (
       <img
-        src={logoAsset.url}
+        src={logoUrl}
         alt="South Delhi Farms & Floors"
         className={className}
         onError={() => setFailed(true)}
